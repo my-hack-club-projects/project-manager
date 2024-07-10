@@ -1,6 +1,9 @@
 # Python cache
 **/*.*.pyc
 
+# Database
+backend/db.sqlite3
+
 # Static files
 backend/staticfiles
 
