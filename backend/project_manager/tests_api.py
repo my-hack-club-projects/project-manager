@@ -148,10 +148,8 @@ class ProjectManagerTests(APITestCase):
         data = {"is_completed": True, "id": task1.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Check if the task container is marked as completed
-        task_container.refresh_from_db()
-        self.assertEqual(task_container.is_completed, True)
+        self.assertEqual(Task.objects.get(id=task1.id).is_completed, True)
+        self.assertEqual(TaskContainer.objects.get(id=task_container.id).is_completed, True)
 
     def test_get_project_sessions(self):
         url = reverse('project-sessions', args=[self.project.id])
