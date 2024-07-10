@@ -75,6 +75,9 @@ class ProjectTaskContainersAPIView(APIView):
     POST:
     Create a new task container in the project.
 
+    PUT:
+    Rename a task container. You can not mark a task container as completed or change any of the other properties.
+
     Example POST data:
     {
         "title": "New Task Container",
@@ -106,6 +109,30 @@ class ProjectTaskContainersAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pk):
+        project = self.get_project(pk)
+
+        if project.category.locked:
+            return Response({"error": "Cannot update a task container in a locked project."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            task_container = TaskContainer.objects.get(pk=request.data['id'], project=project)
+        except TaskContainer.DoesNotExist:
+            return Response({"error": "Task container does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not 'title' in request.data:
+            return Response({"error": "Title is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            task_container.title = request.data['title']
+        except ValueError:
+            return Response({"error": "Invalid title."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        task_container.save()
+
+        serializer = TaskContainerSerializer(task_container)
+        return Response(serializer.data)
     
 class ProjectSessionsAPIView(APIView):
     """
