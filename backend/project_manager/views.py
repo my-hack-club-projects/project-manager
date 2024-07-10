@@ -111,6 +111,9 @@ class ProjectTaskContainersAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, pk):
+        if not 'id' in request.data:
+            return Response({"error": "Task container ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
         project = self.get_project(pk)
 
         if project.category.locked:
@@ -243,6 +246,9 @@ class TaskContainerTasksAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, pk):
+        if not 'id' in request.data:
+            return Response({"error": "Task ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
         task_container = self.get_task_container(pk)
 
         if task_container.project.category.locked:
