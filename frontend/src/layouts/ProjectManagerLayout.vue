@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'LandingPageLayout',
+  name: 'ProjectManagerLayout',
 };
 </script>
 
