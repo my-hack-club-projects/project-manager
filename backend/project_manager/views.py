@@ -263,8 +263,10 @@ class TaskContainerTasksAPIView(APIView):
             if task.is_completed:
                 return Response({"error": "Task is already completed."}, status=status.HTTP_400_BAD_REQUEST)
             task.is_completed = True
-
+            task.save()
+            
             task_container_tasks = Task.objects.filter(task_container=task_container)
+
             if all([task.is_completed for task in task_container_tasks]):
                 task_container.is_completed = True
                 task_container.save()
