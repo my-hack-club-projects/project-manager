@@ -52,6 +52,10 @@ class CategoryProjectsAPIView(APIView):
 
     def post(self, request, pk):
         category = self.get_category(pk)
+
+        if category.locked:
+            return Response({"error": "Cannot create a project in a locked category."}, status=status.HTTP_400_BAD_REQUEST)
+        
         data = request.data
         data['category'] = category.id  # Assign category ID to the project data
         serializer = ProjectSerializer(data=data)
@@ -92,6 +96,10 @@ class ProjectTaskContainersAPIView(APIView):
 
     def post(self, request, pk):
         project = self.get_project(pk)
+
+        if project.category.locked:
+            return Response({"error": "Cannot create a task container in a locked project."}, status=status.HTTP_400_BAD_REQUEST)
+        
         request.data['project'] = project.id
         serializer = TaskContainerSerializer(data=request.data)
         if serializer.is_valid():
@@ -154,6 +162,10 @@ class ProjectSessionsAPIView(APIView):
                 return Response({"error": f"Task with ID '{task_id}' does not exist."}, status=status.HTTP_400_BAD_REQUEST)
             
         project = self.get_project(pk)
+
+        if project.category.locked:
+            return Response({"error": "Cannot create a session in a locked project."}, status=status.HTTP_400_BAD_REQUEST)
+        
         request.data['project'] = project.id
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
@@ -192,6 +204,10 @@ class TaskContainerTasksAPIView(APIView):
 
     def post(self, request, pk):
         task_container = self.get_task_container(pk)
+
+        if task_container.project.category.locked or task_container.is_completed:
+            return Response({"error": "Cannot create a task in a locked task container."}, status=status.HTTP_400_BAD_REQUEST)
+        
         request.data['task_container'] = task_container.id
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
