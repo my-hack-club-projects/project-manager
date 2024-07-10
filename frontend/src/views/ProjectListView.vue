@@ -1,11 +1,20 @@
+<script setup>
+import ProjectCard from '@/components/project/ProjectCard.vue'
+</script>
+
 <template>
-  <div class="container mx-auto">
-    <h1 class="text-4xl font-bold text-center mt-8">Welcome to your Projects page</h1>
-    <p class="text-lg text-center mt-4">This is the Project list view</p>
-    <div class="flex justify-center mt-8">
-      <router-link to="/projects/view/123" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Example project
-      </router-link>
+  <div class="container mx-auto p-4">
+    <h2 class="text-lg font-bold">Your projects</h2>
+    <div class="flex flex-col border-t-2 border-black w-full">
+      <div class="py-4">
+        <h3 class="text-sm font-bold mb-2">Category 1</h3>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <ProjectCard />
+          <ProjectCard />
+          <ProjectCard />
+        </div>
+      </div>
     </div>
   </div>
 </template>
