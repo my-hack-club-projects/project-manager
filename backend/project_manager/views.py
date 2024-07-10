@@ -125,9 +125,6 @@ class ProjectSessionsAPIView(APIView):
     }
     """
 
-    # TODO: When creating a session, loop through all sessions and check if any of them is active. If so, error.
-    # TODO: When creating a session, check if the tasks belong to the project and are not completed.
-
     permission_classes = [IsAuthenticated]
 
     def get_project(self, pk):
