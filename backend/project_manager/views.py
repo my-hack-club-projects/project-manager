@@ -54,7 +54,7 @@ class CategoryProjectsAPIView(APIView):
         category = self.get_category(pk)
 
         if category.locked:
-            return Response({"error": "Cannot create a project in a locked category."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cannot create a project in a locked category."}, status=status.HTTP_403_FORBIDDEN)
         
         data = request.data
         data['category'] = category.id  # Assign category ID to the project data
@@ -101,7 +101,7 @@ class ProjectTaskContainersAPIView(APIView):
         project = self.get_project(pk)
 
         if project.category.locked:
-            return Response({"error": "Cannot create a task container in a locked project."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cannot create a task container in a locked project."}, status=status.HTTP_403_FORBIDDEN)
         
         request.data['project'] = project.id
         serializer = TaskContainerSerializer(data=request.data)
@@ -114,12 +114,12 @@ class ProjectTaskContainersAPIView(APIView):
         project = self.get_project(pk)
 
         if project.category.locked:
-            return Response({"error": "Cannot update a task container in a locked project."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cannot update a task container in a locked project."}, status=status.HTTP_403_FORBIDDEN)
         
         try:
             task_container = TaskContainer.objects.get(pk=request.data['id'], project=project)
         except TaskContainer.DoesNotExist:
-            return Response({"error": "Task container does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Task container does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
         if not 'title' in request.data:
             return Response({"error": "Title is required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -183,12 +183,12 @@ class ProjectSessionsAPIView(APIView):
                 elif task.task_container.project.id != pk:
                     return Response({"error": f"Task '{task.title}' does not belong to the project."}, status=status.HTTP_400_BAD_REQUEST)
             except Task.DoesNotExist:
-                return Response({"error": f"Task with ID '{task_id}' does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"Task with ID '{task_id}' does not exist."}, status=status.HTTP_404_NOT_FOUND)
             
         project = self.get_project(pk)
 
         if project.category.locked:
-            return Response({"error": "Cannot create a session in a locked project."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cannot create a session in a locked project."}, status=status.HTTP_403_FORBIDDEN)
         
         request.data['project'] = project.id
         serializer = SessionSerializer(data=request.data)
@@ -233,7 +233,7 @@ class TaskContainerTasksAPIView(APIView):
         task_container = self.get_task_container(pk)
 
         if task_container.project.category.locked or task_container.is_completed:
-            return Response({"error": "Cannot create a task in a locked task container."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cannot create a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
         
         request.data['task_container'] = task_container.id
         serializer = TaskSerializer(data=request.data)
@@ -246,17 +246,21 @@ class TaskContainerTasksAPIView(APIView):
         task_container = self.get_task_container(pk)
 
         if task_container.project.category.locked:
-            return Response({"error": "Cannot update a task in a locked task container."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Cannot update a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
         
         try:
             task = Task.objects.get(pk=request.data['id'], task_container=task_container)
         except Task.DoesNotExist:
-            return Response({"error": "Task does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Task does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
         if 'is_completed' in request.data:
             if task.is_completed:
                 return Response({"error": "Task is already completed."}, status=status.HTTP_400_BAD_REQUEST)
             task.is_completed = True
+
+            if not task_container.tasks.filter(is_completed=False).exists():
+                task_container.is_completed = True
+                task_container.save()
         if 'title' in request.data:
             try:
                 task.title = request.data['title']
