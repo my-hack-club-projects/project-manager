@@ -1,14 +1,11 @@
 # project_manager/urls.py
 from django.urls import path
-from .views import ProjectListCreateAPIView, TaskContainerListCreateAPIView, TaskContainerDetailAPIView, \
-    TaskListCreateAPIView, TaskDetailAPIView, SessionListCreateAPIView
+from .views import UserCategoriesAPIView, CategoryProjectsAPIView, ProjectTaskContainersAPIView, TaskContainerTasksAPIView
 
 urlpatterns = [
-    path('projects/', ProjectListCreateAPIView.as_view(), name='project-list-create'),
-    path('taskcontainers/', TaskContainerListCreateAPIView.as_view(), name='task-container-list-create'),
-    path('taskcontainers/<int:pk>/', TaskContainerDetailAPIView.as_view(), name='task-container-detail'),
-    path('tasks/', TaskListCreateAPIView.as_view(), name='task-list-create'),
-    path('tasks/<int:pk>/', TaskDetailAPIView.as_view(), name='task-detail'),
-    path('sessions/', SessionListCreateAPIView.as_view(), name='session-list-create'),
+    path('categories/', UserCategoriesAPIView.as_view(), name='user-categories'),
+    path('categories/<int:pk>/projects/', CategoryProjectsAPIView.as_view(), name='category-projects'),
+    path('projects/<int:pk>/taskcontainers/', ProjectTaskContainersAPIView.as_view(), name='project-task-containers'),
+    path('taskcontainers/<int:pk>/tasks/', TaskContainerTasksAPIView.as_view(), name='task-container-tasks'),
     # Add more paths as needed for other views
 ]
