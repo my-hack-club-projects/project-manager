@@ -14,7 +14,7 @@ class ProjectManagerTests(APITestCase):
 
         # Create categories
         self.category1 = Category.objects.create(user=self.user, name="Active Projects")
-        self.category2 = Category.objects.create(user=self.user, name="Archived Projects")
+        self.category2 = Category.objects.create(user=self.user, name="Archived Projects", locked=True)
 
         # Create a project
         self.project = Project.objects.create(category=self.category1, name="Test Project")
