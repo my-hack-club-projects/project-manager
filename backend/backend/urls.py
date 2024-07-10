@@ -19,10 +19,9 @@ from django.urls import include, path
 
 
 from .views import index
-from project_manager import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
-    path('projects/', include('project_manager.urls')),
+    path('api/', include('project_manager.api_urls')),
 ]
