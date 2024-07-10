@@ -21,6 +21,15 @@ class UserCategoriesAPIView(APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
+# project_manager/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from django.http import Http404
+from .models import Category, Project, TaskContainer, Task
+from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer
+
 class CategoryProjectsAPIView(APIView):
     """
     Retrieve projects within a specific category or create a new project in the category.
@@ -33,8 +42,7 @@ class CategoryProjectsAPIView(APIView):
 
     Example POST data:
     {
-        "name": "New Project",
-        "category": 1  # ID of the category
+        "name": "New Project"
     }
     """
     permission_classes = [IsAuthenticated]
@@ -53,12 +61,14 @@ class CategoryProjectsAPIView(APIView):
 
     def post(self, request, pk):
         category = self.get_category(pk)
-        request.data['category'] = category.id
-        serializer = ProjectSerializer(data=request.data)
+        data = request.data
+        data['category'] = category.id  # Assign category ID to the project data
+        serializer = ProjectSerializer(data=data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()  # No need to pass 'user' here
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ProjectTaskContainersAPIView(APIView):
     """

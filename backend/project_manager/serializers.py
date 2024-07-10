@@ -9,7 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ['id', 'name', 'category']
 
 class TaskContainerSerializer(serializers.ModelSerializer):
     class Meta:
