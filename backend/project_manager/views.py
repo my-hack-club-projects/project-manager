@@ -21,15 +21,6 @@ class UserCategoriesAPIView(APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
-# project_manager/views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from django.http import Http404
-from .models import Category, Project, TaskContainer, Task
-from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer
-
 class CategoryProjectsAPIView(APIView):
     """
     Retrieve projects within a specific category or create a new project in the category.
