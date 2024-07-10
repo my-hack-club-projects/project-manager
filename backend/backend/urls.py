@@ -24,10 +24,14 @@ from . import auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views_common.index, name='index'),
     path('api/', include('project_manager.api_urls')),
     path('auth/login/token', obtain_auth_token, name='obtain-auth-token'),
     path('auth/login/', auth_views.UserLoginAPIView.as_view(), name='user-login'),
     path('auth/logout/', auth_views.UserLogoutAPIView.as_view(), name='user-logout'),
     path('auth/user/', auth_views.UserProfileAPIView.as_view(), name='user-profile'),
+
+    # path('', views_common.index, name='index'), # This only works for the home page.
+    # add a catch-all path to handle all other paths
+    path('', views_common.index, name='index'),
+    path('<path>', views_common.index, name='index'),
 ]
