@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import LandingPageLayout from '../layouts/LandingPageLayout.vue'
 import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
@@ -7,7 +8,11 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: LandingPageLayout,
+      children: [
+        { path: '', component: HomeView },
+        // Other routes that should be displayed in the LandingPageLayout
+      ]
     },
     // {
     //   path: '/about',
