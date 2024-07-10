@@ -144,7 +144,7 @@ class ProjectManagerTests(APITestCase):
         task1 = Task.objects.create(task_container=task_container, title="First Task")
 
         # Mark the task as completed using the api (otherwise the function wont trigger)
-        url = reverse('task-container-tasks', args=[task1.id])
+        url = reverse('task-container-tasks', args=[task_container.id])
         data = {"is_completed": True, "id": task1.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
