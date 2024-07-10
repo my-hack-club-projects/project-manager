@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Project, TaskContainer, Task, Session
+from .models import Category, Project, TaskContainer, Task, Session, Note
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,4 +24,9 @@ class TaskSerializer(serializers.ModelSerializer):
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
+        fields = '__all__'
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
         fields = '__all__'

@@ -42,3 +42,14 @@ class Session(models.Model):
 
     def __str__(self):
         return f"Session for {self.project.name} at {self.start_time}"
+
+class Note(models.Model):
+    # notes are like discord messages. they are sent in sessions and can only be sent when a session is active
+    # they serve the purpose of having a place to write down your thoughts or communicate with collaborators (if any)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # the user who sent the note
+    content = models.TextField(max_length=128)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Note by {self.user.username} in session for {self.session.project.name}"

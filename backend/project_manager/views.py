@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
-from .models import Category, Project, TaskContainer, Task, Session
-from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer, SessionSerializer
+from .models import *
+from .serializers import *
 
 class UserCategoriesAPIView(APIView):
     """
@@ -211,3 +211,47 @@ class TaskContainerTasksAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class SessionNotesAPIView(APIView):
+    """
+    Retrieve notes within a specific session or create a new note in the session.
+
+    GET:
+    Retrieve a list of notes within a specific session.
+
+    POST:
+    Create a new note in the session.
+
+    Example POST data:
+    {
+        "content": "This is a new note."
+    }
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get_session(self, pk):
+        try:
+            return Session.objects.get(pk=pk, project__category__user=self.request.user)
+        except Session.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        session = self.get_session(pk)
+        notes = Note.objects.filter(session=session)
+        serializer = NoteSerializer(notes, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, pk):
+        session = self.get_session(pk)
+
+        if not session.active:
+            return Response({"error": "Cannot create a note in an inactive session."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.data['session'] = session.id
+        request.data['user'] = request.user.id
+        serializer = NoteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
