@@ -65,7 +65,7 @@ class CategoryProjectsAPIView(APIView):
         data['category'] = category.id  # Assign category ID to the project data
         serializer = ProjectSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()  # No need to pass 'user' here
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -83,7 +83,6 @@ class ProjectTaskContainersAPIView(APIView):
     Example POST data:
     {
         "title": "New Task Container",
-        "project": 1  # ID of the project
     }
     """
     permission_classes = [IsAuthenticated]
@@ -105,7 +104,7 @@ class ProjectTaskContainersAPIView(APIView):
         request.data['project'] = project.id
         serializer = TaskContainerSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -121,8 +120,7 @@ class TaskContainerTasksAPIView(APIView):
 
     Example POST data:
     {
-        "name": "New Task",
-        "task_container": 1  # ID of the task container
+        "title": "New Task",
     }
     """
     permission_classes = [IsAuthenticated]
@@ -144,6 +142,6 @@ class TaskContainerTasksAPIView(APIView):
         request.data['task_container'] = task_container.id
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
