@@ -117,21 +117,21 @@ class ProjectManagerTests(APITestCase):
 
     def test_rename_task_container(self):
         url = reverse('project-task-containers', args=[self.task_container.id])
-        data = {"title": "New Title"}
+        data = {"title": "New Title", "id": self.task_container.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(TaskContainer.objects.get(id=self.task_container.id).title, "New Title")
 
     def test_rename_task(self):
         url = reverse('task-container-tasks', args=[self.task1.id])
-        data = {"title": "New Title"}
+        data = {"title": "New Title", "id": self.task1.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.get(id=self.task1.id).title, "New Title")
 
     def test_mark_task_as_completed(self):
         url = reverse('task-container-tasks', args=[self.task1.id])
-        data = {"is_completed": True}
+        data = {"is_completed": True, "id": self.task1.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.get(id=self.task1.id).is_completed, True)
@@ -145,7 +145,7 @@ class ProjectManagerTests(APITestCase):
 
         # Mark the task as completed using the api (otherwise the function wont trigger)
         url = reverse('task-container-tasks', args=[task1.id])
-        data = {"is_completed": True}
+        data = {"is_completed": True, "id": task1.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
