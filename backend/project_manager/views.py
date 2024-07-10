@@ -180,6 +180,9 @@ class TaskContainerTasksAPIView(APIView):
     POST:
     Create a new task in the task container.
 
+    PUT:
+    Mark a task as completed or change the title. You can not mark a task as incomplete or change any of the other properties.
+
     Example POST data:
     {
         "title": "New Task",
@@ -211,6 +214,32 @@ class TaskContainerTasksAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pk):
+        task_container = self.get_task_container(pk)
+
+        if task_container.project.category.locked:
+            return Response({"error": "Cannot update a task in a locked task container."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            task = Task.objects.get(pk=request.data['id'], task_container=task_container)
+        except Task.DoesNotExist:
+            return Response({"error": "Task does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if 'is_completed' in request.data:
+            if task.is_completed:
+                return Response({"error": "Task is already completed."}, status=status.HTTP_400_BAD_REQUEST)
+            task.is_completed = True
+        if 'title' in request.data:
+            try:
+                task.title = request.data['title']
+            except ValueError:
+                return Response({"error": "Invalid title."}, status=status.HTTP_400_BAD_REQUEST)
+
+        task.save()
+
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
     
 class SessionNotesAPIView(APIView):
     """
