@@ -147,6 +147,7 @@ class ProjectManagerTests(APITestCase):
         url = reverse('task-container-tasks', args=[task_container.id])
         data = {"is_completed": True, "id": task1.id}
         response = self.client.put(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.get(id=task1.id).is_completed, True)
         self.assertEqual(TaskContainer.objects.get(id=task_container.id).is_completed, True)
