@@ -19,11 +19,14 @@ from django.urls import include, path
 
 from rest_framework.authtoken.views import obtain_auth_token
 
-from .views import index
+from . import views as views_common
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
+    path('', views_common.index, name='index'),
     path('api/', include('project_manager.api_urls')),
-    path('api/token/login/', obtain_auth_token, name='obtain-auth-token')
+    path('api/login/', views_common.UserLoginAPIView.as_view(), name='user-login'),
+    path('api/logout/', views_common.UserLogoutAPIView.as_view(), name='user-logout'),
+    path('api/user/', views_common.UserProfileAPIView.as_view(), name='user-profile'),
+    path('api/login/token', obtain_auth_token, name='obtain-auth-token')
 ]
