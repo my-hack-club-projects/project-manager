@@ -30,6 +30,28 @@ class ProjectManagerTests(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
+    def test_act_as_other_user(self):
+        # Create a new user
+        other_user = User.objects.create_user(username='otheruser', password='otherpassword')
+
+        # Create a new category
+        other_category = Category.objects.create(user=other_user, name="Other Category")
+
+        for i in range(3):
+            # Create three more categories for the other user
+            Category.objects.create(user=other_user, name=f"Category {i}")
+
+        # Try to access the other user's category
+        url = reverse('category-projects', args=[other_category.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        
+        # list the other user's categories
+        url = reverse('user-categories')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)  # Should return two categories 
+
     def test_get_user_categories(self):
         url = reverse('user-categories')
         response = self.client.get(url)
@@ -92,6 +114,44 @@ class ProjectManagerTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Task.objects.count(), 2)
+
+    def test_rename_task_container(self):
+        url = reverse('project-task-containers', args=[self.task_container.id])
+        data = {"title": "New Title"}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(TaskContainer.objects.get(id=self.task_container.id).title, "New Title")
+
+    def test_rename_task(self):
+        url = reverse('task-container-tasks', args=[self.task1.id])
+        data = {"title": "New Title"}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Task.objects.get(id=self.task1.id).title, "New Title")
+
+    def test_mark_task_as_completed(self):
+        url = reverse('task-container-tasks', args=[self.task1.id])
+        data = {"is_completed": True}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Task.objects.get(id=self.task1.id).is_completed, True)
+
+    def test_taskcontainer_marked_as_completed_when_all_tasks_are_completed(self):
+        # Create a new task containre
+        task_container = TaskContainer.objects.create(project=self.project, title="New Task Container")
+
+        # Create a new task
+        task1 = Task.objects.create(task_container=task_container, title="First Task")
+
+        # Mark the task as completed using the api (otherwise the function wont trigger)
+        url = reverse('task-container-tasks', args=[task1.id])
+        data = {"is_completed": True}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check if the task container is marked as completed
+        task_container.refresh_from_db()
+        self.assertEqual(task_container.is_completed, True)
 
     def test_get_project_sessions(self):
         url = reverse('project-sessions', args=[self.project.id])
