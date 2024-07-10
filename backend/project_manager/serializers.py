@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Project, TaskContainer, Task, Session
+from .models import Category, Project, TaskContainer, Task, Session
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'user']
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
