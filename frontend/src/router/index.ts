@@ -20,7 +20,10 @@ const router = createRouter({
         // @ts-ignore
         { path: 'about', component: () => import('../views/AboutView.vue') },
         // @ts-ignore
-        { path: 'contact', component: () => import('../views/ContactView.vue') }
+        { path: 'contact', component: () => import('../views/ContactView.vue') },
+
+        // @ts-ignore
+        { path: 'logintest', component: () => import('../views/LoginTest.vue')},
         // Other routes that should be displayed in the LandingPageLayout
       ]
     },
