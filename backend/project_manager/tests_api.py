@@ -49,6 +49,13 @@ class ProjectManagerTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Project.objects.count(), 2)  # Now there should be two projects
 
+    def test_create_project_in_locked_category(self):
+        url = reverse('category-projects', args=[self.category2.id])
+        data = {"name": "New Project"}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Project.objects.count(), 1)  # Should not create a project
+
     def test_get_project_task_containers(self):
         url = reverse('project-task-containers', args=[self.project.id])
         response = self.client.get(url)
@@ -74,6 +81,17 @@ class ProjectManagerTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Task.objects.count(), 3)  # Now there should be three tasks
+
+    def test_create_task_in_completed_task_container(self):
+        # Mark the task container as completed
+        self.task_container.is_completed = True
+        self.task_container.save()
+
+        url = reverse('task-container-tasks', args=[self.task_container.id])
+        data = {"title": "New Task"}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Task.objects.count(), 2)
 
     def test_get_project_sessions(self):
         url = reverse('project-sessions', args=[self.project.id])
