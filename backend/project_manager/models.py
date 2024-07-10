@@ -10,14 +10,14 @@ class Category(models.Model):
         return self.name
     
 class Project(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=64)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 class TaskContainer(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=64)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
 
@@ -25,7 +25,7 @@ class TaskContainer(models.Model):
         return self.title
 
 class Task(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=64)
     task_container = models.ForeignKey(TaskContainer, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
 
