@@ -17,7 +17,6 @@ const router = createRouter({
         { path: 'contact', component: () => import('../views/ContactView.vue') },
 
         { path: 'logintest', component: () => import('../views/LoginTest.vue')},
-        // Other routes that should be displayed in the LandingPageLayout
       ]
     },
 
@@ -30,8 +29,6 @@ const router = createRouter({
         { path: '', component: () => import('../views/ProjectListView.vue') },
         { path: 'analytics', component: () => import('../views/ProjectAnalytics.vue')},
         { path: 'view/:id(\\d+)', component: () => import('../views/ProjectView.vue') },
-        
-        // Other routes that should be displayed in the ProjectManagerLayout
       ]
     },
   ]
