@@ -21,8 +21,8 @@ class UserLoginAPIView(APIView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse({'message': 'Logged in successfully'}, status=status.HTTP_200_OK)
-        return JsonResponse({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'message': 'Logged in successfully', 'authenticated': True}, status=status.HTTP_200_OK)
+        return JsonResponse({'error': 'Invalid credentials', 'authenticated': False}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogoutAPIView(APIView):
     """
@@ -32,7 +32,7 @@ class UserLogoutAPIView(APIView):
 
     def post(self, request):
         logout(request)
-        return JsonResponse({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
+        return JsonResponse({'message': 'Logged out successfully', 'authenticated': False}, status=status.HTTP_200_OK)
 
 class UserProfileAPIView(APIView):
     """
