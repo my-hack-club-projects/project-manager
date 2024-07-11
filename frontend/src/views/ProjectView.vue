@@ -8,6 +8,8 @@
         <TaskContainer v-for="(container, index) in taskContainers" :key="index" :id="container.id"
           :title="container.title" :is_completed="container.is_completed" :tasks="container.tasks" />
       </div>
+
+      <AddTaskForm :placeholder="'New milestone'" />
     </div>
   </div>
 </template>
@@ -15,11 +17,14 @@
 <script>
 import TaskContainer from '../components/task/TaskContainer.vue'
 import SessionInfo from '../components/project/SessionInfo.vue'
+import AddTaskForm from '@/components/task/AddTaskForm.vue';
+
 import axios from 'axios'
 
 export default {
   components: {
     TaskContainer,
+    AddTaskForm,
     SessionInfo
   },
   data() {
