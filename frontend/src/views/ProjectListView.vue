@@ -7,7 +7,8 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
     <div class="container mx-auto p-4">
       <div class="flex items-center">
         <h2 class="text-2xl font-bold mb-4 mt-2">Your projects</h2>
-        <button class="bg-gradient-to-br from-cyan-300 to-blue-600 text-white font-bold py-2 px-4 rounded-lg ml-auto">
+        <button @click="createProject"
+          class="bg-gradient-to-br from-cyan-300 to-blue-600 text-white font-bold py-2 px-4 rounded-lg ml-auto">
           Create project
         </button>
       </div>
@@ -16,7 +17,8 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
           <h3 class="text-sm font-bold mb-2">{{ category.name }}</h3>
 
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <ProjectCard v-for="(project, index) in category.projects" :key="index" :category="category" :project="project" />
+            <ProjectCard v-for="(project, index) in category.projects" :key="index" :category="category"
+              :project="project" />
           </div>
         </div>
       </div>
@@ -32,6 +34,21 @@ export default {
   data() {
     return {
       categories: []
+    }
+  },
+  methods: {
+    createProject() {
+      const defaultCategory = this.categories[0] // TODO: Add default_category field to the user endpoint
+
+      this.$http.post('/api/projects/', {
+        name: 'New project',
+        category: defaultCategory.id
+      }).then(response => {
+        const project = response.data.data
+        this.$router.push(`/projects/${defaultCategory.id}/${project.id}/view`)
+      }).catch(error => {
+        alert(error.response.data.message)
+      })
     }
   },
   async created() {
