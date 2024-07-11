@@ -36,6 +36,8 @@
 import AddTaskForm from './AddTaskForm.vue'
 import TaskList from './TaskList.vue'
 
+import axios from 'axios'
+
 export default {
     props: {
         id: Number,
@@ -48,18 +50,10 @@ export default {
     },
     methods: {
         addTask(task) {
-            fetch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    title: task,
-                })
+            axios.post(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                title: task,
             }).then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw new Error('Failed to add task')
-            }).then(data => {
-                this.tasks.push(data)
+                this.tasks.push(response.data)
             }).catch(error => {
                 console.error('Error adding task:', error)
             })
@@ -69,44 +63,25 @@ export default {
             this.tasks.splice(taskIndex, 1)
         },
         editTask({ taskIndex, newText }) {
-            fetch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    id: this.tasks[taskIndex].id,
-                    title: newText,
-                })
+            axios.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                id: this.tasks[taskIndex].id,
+                title: newText,
             }).then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw new Error('Failed to edit task')
-            }).then(data => {
-                this.tasks.splice(taskIndex, 1, data)
+                this.tasks.splice(taskIndex, 1, response.data)
             }).catch(error => {
                 console.error('Error editing task:', error)
             })
 
-            this.tasks.splice(index, 1, { ...this.tasks[index], title: newText })
         },
         toggleComplete(taskIndex) {
-            fetch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    id: this.tasks[taskIndex].id,
-                    is_completed: true,
-                })
+            axios.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                id: this.tasks[taskIndex].id,
+                is_completed: true,
             }).then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw new Error('Failed to edit task')
-            }).then(data => {
-                this.tasks.splice(index, 1, data)
+                this.tasks.splice(taskIndex, 1, response.data)
             }).catch(error => {
                 console.error('Error editing task:', error)
             })
-
-            this.tasks[taskIndex].is_completed = true
         }
     }
 }
