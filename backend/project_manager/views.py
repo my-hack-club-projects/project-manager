@@ -15,6 +15,8 @@ Strict rules for returning responses:
 - Always return a 403 status code if the request is forbidden
 - Always return a 404 status code if the resource does not exist
 - Always return a 2XX status code if the request is successful.
+
+- If creating a resource and it was successful, return it in the response under a key "data"
 """
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -72,16 +74,27 @@ class ProjectViewSet(viewsets.ModelViewSet):
             category_id = data.get('category')
             category = Category.objects.get(pk=category_id, user=request.user)
         except Category.DoesNotExist:
-            raise Http404("Category does not exist")
+            return Response({
+                "success": False,
+                "message": "Category does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)
         
         if category.locked:
-            return Response({"error": "Cannot create a project in a locked category."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({
+                "success": False,
+                "message": "Cannot create a project in a locked category."
+            }, status=status.HTTP_403_FORBIDDEN)
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
+        
         self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+        return Response({
+            "success": True,
+            "message": "Project created successfully.",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
 class TaskContainerViewSet(viewsets.ModelViewSet):
     """
     GET /projects/<project_pk>/taskcontainers/
