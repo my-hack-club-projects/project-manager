@@ -23,8 +23,30 @@ class ProjectManagerTests(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
+    # Test categories
     def test_get_categories(self):
-        response = self.client.get('/categories/')
+        response = self.client.get('/api/categories/')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 2)
+        self.assertEqual(len(response.json()), 2) # Two categories that we created in setUp
+
+    def test_create_category(self):
+        response = self.client.post('/api/categories/', {
+            'user': self.user.id,
+            'name': 'New Category'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_category(self):
+        response = self.client.put(f'/api/categories/{self.category1.id}/', {
+            'user': self.user.id,
+            'name': 'Updated Category'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_category(self):
+        response = self.client.delete(f'/api/categories/{self.category1.id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
