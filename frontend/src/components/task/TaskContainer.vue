@@ -50,42 +50,43 @@ export default {
     },
     methods: {
         addTask(task) {
-            this.$http.post(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+            this.$http.post(`/api/tasks/`, {
                 title: task,
+                task_container: this.id,
             }).then(response => {
-                this.tasks.push(response.data)
+                this.tasks.push(response.data.data)
             }).catch(error => {
-                alert(error.response.data.error)
+                alert(error.response.data.message)
             })
         },
-        deleteTask(taskIndex) {
-            this.$http.delete(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+        deleteTask(taskIndex, taskId) {
+            this.$http.delete(`/api/tasks/${taskId}/`, {
                 id: this.tasks[taskIndex].id,
             }).then(() => {
                 this.tasks.splice(taskIndex, 1)
             }).catch(error => {
-                alert(error.response.data.error)
+                alert(error.response.data.message)
             })
         },
-        editTask(taskIndex, newText) {
-            this.$http.put(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+        editTask(taskIndex, taskId, newText) {
+            this.$http.put(`/api/tasks/${taskId}/`, {
                 id: this.tasks[taskIndex].id,
                 title: newText,
             }).then(response => {
-                this.tasks.splice(taskIndex, 1, response.data)
+                this.tasks.splice(taskIndex, 1, response.data.data)
             }).catch(error => {
-                alert(error.response.data.error)
+                alert(error.response.data.message)
             })
 
         },
-        toggleComplete(taskIndex) {
-            this.$http.put(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+        toggleComplete(taskIndex, taskId) {
+            this.$http.put(`/api/tasks/${taskId}/`, {
                 id: this.tasks[taskIndex].id,
                 is_completed: true,
             }).then(response => {
-                this.tasks.splice(taskIndex, 1, response.data)
+                this.tasks.splice(taskIndex, 1, response.data.data)
             }).catch(error => {
-                alert(error.response.data.error)
+                alert(error.response.data.message)
             })
         },
 
