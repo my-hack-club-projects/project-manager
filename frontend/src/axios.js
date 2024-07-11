@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: '/api/',  // Adjust the base URL as per your API endpoint
+  baseURL: '/',  // Adjust the base URL as per your API endpoint
   headers: {
     'Content-Type': 'application/json',
     'X-CSRFToken': getCookie('csrftoken'),  // Function to get CSRF token from cookies
