@@ -58,6 +58,20 @@ class ProjectManagerTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 1) # One project that we created in setUp
 
+    def test_get_projects_in_category(self):
+        # use query params to filter projects in a category
+        response = self.client.get(f'/api/projects/?category={self.category1.id}')
+        count_from_db = Project.objects.filter(category=self.category1).count()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), count_from_db)
+
+        response = self.client.get(f'/api/projects/?category={self.category2.id}')
+        count_from_db = Project.objects.filter(category=self.category2).count()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), count_from_db)
+
     def test_create_delete_project(self):
         response = self.client.post('/api/projects/', {
             'category': self.category1.id,

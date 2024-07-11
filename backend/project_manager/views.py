@@ -65,7 +65,11 @@ class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Project.objects.filter(category__user=self.request.user)
+        queryset = Project.objects.filter(category__user=self.request.user)
+        category_id = self.request.query_params.get('category', None)
+        if category_id is not None:
+            queryset = queryset.filter(category_id=category_id)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -137,8 +141,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
     
 class TaskContainerViewSet(viewsets.ModelViewSet):
     """
-    GET /projects/<project_pk>/taskcontainers/
-    POST /projects/<project_pk>/taskcontainers/
+    GET /taskcontainers/
+    POST /taskcontainers/
+    GET /taskcontainers/<pk>/
     PUT, DELETE /taskcontainers/<pk>/
     """
     queryset = TaskContainer.objects.all()
