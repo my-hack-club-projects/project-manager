@@ -20,6 +20,7 @@ Strict rules for returning responses:
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     GET /categories/
+    GET /categories/<pk>/
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -52,8 +53,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
-    GET /categories/<category_pk>/projects/
-    POST /categories/<category_pk>/projects/
+    GET /projects/
+    POST /projects/
+    GET /projects/<pk>/
     PUT, DELETE /projects/<pk>/
     """
     queryset = Project.objects.all()
@@ -65,8 +67,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
-        category_id = kwargs.get('category_pk')
+
         try:
+            category_id = data.get('category')
             category = Category.objects.get(pk=category_id, user=request.user)
         except Category.DoesNotExist:
             raise Http404("Category does not exist")
@@ -74,7 +77,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if category.locked:
             return Response({"error": "Cannot create a project in a locked category."}, status=status.HTTP_403_FORBIDDEN)
 
-        data['category'] = category_id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
