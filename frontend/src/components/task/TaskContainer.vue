@@ -57,8 +57,13 @@ export default {
             })
         },
         deleteTask(taskIndex) {
-            // There is no delete endpoint lol
-            this.tasks.splice(taskIndex, 1)
+            this.$http.delete(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                id: this.tasks[taskIndex].id,
+            }).then(() => {
+                this.tasks.splice(taskIndex, 1)
+            }).catch(error => {
+                console.error('Error deleting task:', error)
+            })
         },
         editTask({ taskIndex, newText }) {
             this.$http.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
