@@ -5,7 +5,12 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
 <template>
   <div class="h-full">
     <div class="container mx-auto p-4">
-      <h2 class="text-2xl font-bold mb-4 mt-2">Your projects</h2>
+      <div class="flex items-center">
+        <h2 class="text-2xl font-bold mb-4 mt-2">Your projects</h2>
+        <button class="bg-gradient-to-br from-cyan-300 to-blue-600 text-white font-bold py-2 px-4 rounded-lg ml-auto">
+          Create project
+        </button>
+      </div>
       <div class="flex flex-col">
         <div v-for="(category, index) in categories" :key="index" class="py-4">
           <h3 class="text-sm font-bold mb-2">{{ category.name }}</h3>
