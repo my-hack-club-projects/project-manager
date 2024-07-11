@@ -5,7 +5,7 @@
                 <div class="flex justify-between">
                     <div class="flex items-center">
                         <h1 class="text-lg font-bold">{{ title }}</h1>
-                        <button class="ml-2">
+                        <button @click="editSelf" class="ml-2">
                             <svg class="feather feather-edit" fill="none" height="24" stroke="currentColor"
                                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
                                 width="24" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +15,7 @@
                         </button>
                     </div>
 
-                    <button class="mr-2">
+                    <button @click="deleteSelf" class="mr-2">
                         <svg class="feather feather-edit" height="16" width="16" fill="#000000" version="1.1"
                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 490 490" xml:space="preserve">
@@ -40,7 +40,9 @@ export default {
     props: {
         id: Number,
         title: String,
-        tasks: Array
+        is_completed: Boolean,
+
+        tasks: Array,
     },
     components: {
         AddTaskForm,
@@ -85,6 +87,17 @@ export default {
             }).catch(error => {
                 console.error('Error editing task:', error)
             })
+        },
+
+        deleteSelf() {
+            this.$emit('delete', this.id)
+        },
+
+        editSelf() {
+            const newTitle = prompt('Enter new name', this.title)
+            if (newTitle !== null) {
+                this.$emit('edit', this.id, newTitle.trim())
+            }
         }
     }
 }
