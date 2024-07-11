@@ -26,13 +26,18 @@ export default {
     },
     methods: {
         addTask(task) {
-            this.tasks.push(task)
+            // TODO: send request to the server, if successful, add the response to the tasks array
+            this.tasks.push({ // DEMO: add the task to the tasks array
+                id: this.tasks.length + 1,
+                title: task,
+                is_completed: false
+            })
         },
         deleteTask(taskIndex) {
             this.tasks.splice(taskIndex, 1)
         },
         editTask({ index, newText }) {
-            this.tasks.splice(index, 1, { ...this.tasks[index], task: newText })
+            this.tasks.splice(index, 1, { ...this.tasks[index], title: newText })
         },
         toggleComplete(taskIndex) {
             this.tasks[taskIndex].is_completed = !this.tasks[taskIndex].is_completed
