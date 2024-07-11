@@ -18,7 +18,7 @@
                 </svg>
             </button>
         </div>
-        <div class="flex flex-col items-center p-2 bg-slate-100 rounded-md shadow-sm w-full hover:cursor-pointer">
+        <div class="flex flex-col items-center p-2 bg-slate-100 rounded-md shadow-sm hover:cursor-pointer">
             <div class="flex items-center justify-start w-full">
                 <button @click.stop="onPauseButtonClicked" class="rounded-full p-1 flex items-center justify-center">
                     <div
@@ -31,7 +31,7 @@
                         </svg>
                     </div>
                 </button>
-                <div class="flex flex-col ml-2 ">
+                <div class="flex flex-col ml-2 mr-4">
                     <h3 class="text-lg font-bold">Active session</h3>
                     <p class="text-gray-500">session name here</p>
                 </div>
