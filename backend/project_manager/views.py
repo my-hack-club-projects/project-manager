@@ -152,7 +152,7 @@ class ProjectTaskContainersAPIView(APIView):
             return Response({"error": "Task container does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
         task_container.delete()
-        return Response({"message": "Task container deleted."})
+        return Response({"message": "Task container deleted.", "success": True})
     
 class ProjectSessionsAPIView(APIView):
     """
@@ -313,7 +313,7 @@ class TaskContainerTasksAPIView(APIView):
             return Response({"error": "Task does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
         task.delete()
-        return Response({"message": "Task deleted."})
+        return Response({"message": "Task deleted.", "success": True})
     
 class SessionNotesAPIView(APIView):
     """
