@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -33,5 +33,5 @@ urlpatterns = [
     # path('', views_common.index, name='index'), # This only works for the home page.
     # add a catch-all path to handle all other paths
     path('', views_common.index, name='index'),
-    path('<path>', views_common.index, name='index'),
+    re_path(r'^(?P<path>.*)/$', views_common.index, name='index'),
 ]
