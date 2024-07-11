@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -35,13 +35,19 @@ class Task(models.Model):
 class Session(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now_add=True)
-    duration = models.IntegerField()  # in minutes
+    duration = models.IntegerField(default=60)  # in minutes
     active = models.BooleanField(default=True)
-    goal = models.TextField()
+    goal = models.TextField(default="No goal")
     tasks = models.ManyToManyField(Task)
 
     def __str__(self):
         return f"Session for {self.project.name} at {self.start_time}"
+    
+    def update_active_status(self):
+        # if the session has been active for longer than its duration, set it to inactive
+        if (self.start_time - timezone.now()).seconds > self.duration * 60:
+            self.active = False
+            self.save()
 
 class Note(models.Model):
     # notes are like discord messages. they are sent in sessions and can only be sent when a session is active

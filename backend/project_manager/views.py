@@ -328,8 +328,8 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 class SessionViewSet(viewsets.ModelViewSet):
     """
-    GET /projects/<project_pk>/sessions/
-    POST /projects/<project_pk>/sessions/
+    GET, POST /sessions/
+    GET /sessions/<pk>/
     PUT, DELETE /sessions/<pk>/
     """
     queryset = Session.objects.all()
@@ -337,34 +337,168 @@ class SessionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Session.objects.filter(project__category__user=self.request.user)
+        queryset = Session.objects.filter(project__category__user=self.request.user)
+        project_id = self.request.query_params.get('project', None)
+        active = self.request.query_params.get('active', None)
+        task_id = self.request.query_params.get('task', None)
+        if project_id is not None:
+            queryset = queryset.filter(project_id=project_id)
+        if active is not None:
+            active = active.lower() == 'true'
+            queryset = queryset.filter(active=active)
+        if task_id is not None:
+            queryset = queryset.filter(tasks__id=task_id)
+        return queryset
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if instance.project.category.user != request.user:
+            return Response({
+                "success": False,
+                "message": "Session does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        if instance.active:
+            instance.update_active_status()
+            instance.save()
+
+        serializer = self.get_serializer(instance)
+
+        return Response({
+            "success": True,
+            "message": "Session retrieved successfully.",
+            "data": serializer.data
+        })
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        for session in queryset:
+            if session.active:
+                session.update_active_status()
+                session.save()
+
+        sessions = []
+
+        for session in queryset:
+            serializer = self.get_serializer(session)
+            sessions.append(serializer.data)
+
+        return Response({
+            "success": True,
+            "message": "Sessions retrieved successfully.",
+            "data": sessions
+        })
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
-        project_id = kwargs.get('project_pk')
+        
         try:
+            project_id = data.get('project')
             project = Project.objects.get(pk=project_id, category__user=request.user)
         except Project.DoesNotExist:
-            raise Http404("Project does not exist")
+            return Response({
+                "success": False,
+                "message": "Project does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)
         
         if project.category.locked:
-            return Response({"error": "Cannot create a session in a locked project."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({
+                "success": False,
+                "message": "Cannot create a session in a locked project."
+            }, status=status.HTTP_403_FORBIDDEN)
 
+        # Update active status of all sessions
+        queryset = self.get_queryset()
+        active_sessions = queryset.filter(active=True)
+
+        for session in active_sessions:
+            session.update_active_status()
+            session.save()
+
+        # Check if there still is an active session
         active_sessions = Session.objects.filter(project__category__user=self.request.user, active=True)
         if active_sessions.exists():
-            return Response({"error": "There is already an active session for the user."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "success": False,
+                "message": "There is already an active session."
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         tasks = data.get('tasks', [])
         for task_id in tasks:
             try:
                 task = Task.objects.get(pk=task_id)
-                if task.is_completed or task.task_container.project.id != project_id:
-                    return Response({"error": f"Invalid task ID '{task_id}'."}, status=status.HTTP_400_BAD_REQUEST)
+                if task.is_completed:
+                    return Response({
+                        "success": False,
+                        "message": "Cannot start a session with a completed task."
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                elif task.task_container.project != project:
+                    return Response({
+                        "success": False,
+                        "message": "Task does not belong to the project."
+                    }, status=status.HTTP_400_BAD_REQUEST)
             except Task.DoesNotExist:
-                return Response({"error": f"Task with ID '{task_id}' does not exist."}, status=status.HTTP_404_NOT_FOUND)
-        
-        data['project'] = project_id
+                return Response({
+                    "success": False,
+                    "message": "Task does not exist."
+                }, status=status.HTTP_404_NOT_FOUND)
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response({
+            "success": True,
+            "message": "Session created successfully.",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.project.category.locked:
+            return Response({
+                "success": False,
+                "message": "Cannot update a session in a locked project."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            instance.duration = request.data.get('duration', instance.duration)
+        except ValueError:
+            return Response({
+                "success": False,
+                "message": "Duration must be a number."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            instance.goal = request.data.get('goal', instance.goal)
+        except ValueError:
+            return Response({
+                "success": False,
+                "message": "Goal must be a string."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        if str(request.data.get('active')).lower().strip() == "false": # So it can be a string or a boolean
+            instance.active = False
+            instance.save()
+        elif request.data.get('active'):
+            return Response({
+                "success": False,
+                "message": "Cannot manually set a session to active."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        instance.save()
+        serializer = self.get_serializer(instance)
+        
+        return Response({
+            "success": True,
+            "message": "Session updated successfully.",
+            "data": serializer.data
+        })
+    
+    def destroy(self, request, *args, **kwargs):
+        return Response({
+            "success": False,
+            "message": "Sessions cannot be deleted directly."
+        }, status=status.HTTP_403_FORBIDDEN)

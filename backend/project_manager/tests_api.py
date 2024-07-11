@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from .models import Category, Project, TaskContainer, Task, Session
+import time
 
 class ProjectManagerTests(APITestCase):
 
@@ -19,6 +20,10 @@ class ProjectManagerTests(APITestCase):
 
         self.task1 = Task.objects.create(task_container=self.task_container, title="First Task")
         self.task2 = Task.objects.create(task_container=self.task_container, title="Second Task")
+        
+        self.session = Session.objects.create(project=self.project)
+        self.session.tasks.set([self.task1, self.task2])
+        self.session.save()
 
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
@@ -202,3 +207,50 @@ class ProjectManagerTests(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['data']['is_completed'], True)
+
+    # Test sessions
+    def test_get_sessions(self):
+        response = self.client.get('/api/sessions/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()['data']), 1) # One session that we created in setUp
+
+    def test_get_sessions_with_task(self):
+        response = self.client.get(f'/api/sessions/?task={self.task1.id}')
+        count_from_db = Session.objects.filter(tasks__exact=self.task1).count()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()['data']), count_from_db)
+
+    def test_create_delete_session(self):
+        response = self.client.post('/api/sessions/', {
+            'project': self.project.id,
+            'tasks': [self.task2.id]
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_session_w_complete_task(self):
+        response = self.client.put(f'/api/tasks/{self.task1.id}/', {
+            'is_completed': True
+            })
+
+        response = self.client.post('/api/sessions/', {
+            'project': self.project.id,
+            'tasks': [self.task1.id]
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_stop_session(self):
+        response = self.client.put(f'/api/sessions/{self.session.id}/', {
+            'active': False
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['data']['active'], False)
+
+    def test_attempt_delete_session(self):
+        response = self.client.delete(f'/api/sessions/{self.session.id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
