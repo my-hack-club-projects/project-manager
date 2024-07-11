@@ -137,6 +137,23 @@ class ProjectTaskContainersAPIView(APIView):
         serializer = TaskContainerSerializer(task_container)
         return Response(serializer.data)
     
+    def delete(self, request, pk):
+        if not 'id' in request.data:
+            return Response({"error": "Task container ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        project = self.get_project(pk)
+
+        if project.category.locked:
+            return Response({"error": "Cannot delete a task container in a locked project."}, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            task_container = TaskContainer.objects.get(pk=request.data['id'], project=project)
+        except TaskContainer.DoesNotExist:
+            return Response({"error": "Task container does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        
+        task_container.delete()
+        return Response({"message": "Task container deleted."})
+    
 class ProjectSessionsAPIView(APIView):
     """
     Retrieve sessions within a specific project or create a new session in the project.
@@ -280,6 +297,23 @@ class TaskContainerTasksAPIView(APIView):
 
         serializer = TaskSerializer(task)
         return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        if not 'id' in request.data:
+            return Response({"error": "Task ID is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        task_container = self.get_task_container(pk)
+
+        if task_container.project.category.locked:
+            return Response({"error": "Cannot delete a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            task = Task.objects.get(pk=request.data['id'], task_container=task_container)
+        except Task.DoesNotExist:
+            return Response({"error": "Task does not exist."}, status=status.HTTP_404_NOT_FOUND)
+        
+        task.delete()
+        return Response({"message": "Task deleted."})
     
 class SessionNotesAPIView(APIView):
     """
