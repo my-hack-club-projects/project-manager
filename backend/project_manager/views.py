@@ -230,6 +230,101 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
             "success": True,
             "message": "Task container deleted successfully."
         })
+    
+class TaskViewSet(viewsets.ModelViewSet):
+    """
+    GET, POST /tasks/
+    GET /tasks/?task_container=<task_container_id>
+    GET /tasks/<pk>/
+    PUT, DELETE /tasks/<pk>/
+    """
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Task.objects.filter(task_container__project__category__user=self.request.user)
+        task_container_id = self.request.query_params.get('task_container', None)
+        if task_container_id is not None:
+            queryset = queryset.filter(task_container_id=task_container_id)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+
+        try:
+            task_container_id = data.get('task_container')
+            task_container = TaskContainer.objects.get(pk=task_container_id, project__category__user=request.user)
+        except TaskContainer.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "Task container does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        if task_container.project.category.locked or task_container.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot create a task in a locked or completed task container."
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return Response({
+            "success": True,
+            "message": "Task created successfully.",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.task_container.project.category.locked or instance.task_container.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot update a task in a locked or completed task container."
+            }, status=status.HTTP_403_FORBIDDEN)
+        elif instance.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot update a completed task."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        if 'is_completed' in request.data:
+            instance.is_completed = True
+            instance.save()
+            
+            task_container_tasks = Task.objects.filter(task_container=instance.task_container)
+            if all([task.is_completed for task in task_container_tasks]):
+                instance.task_container.is_completed = True
+                instance.task_container.save()
+        
+        elif 'title' in request.data:
+            instance.title = request.data['title']
+            instance.save()
+        
+        serializer = self.get_serializer(instance)
+        
+        return Response({
+            "success": True,
+            "message": "Task updated successfully.",
+            "data": serializer.data
+        })
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.task_container.project.category.locked or instance.task_container.is_completed or instance.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot delete that is completed or in a locked or completed task container."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        instance.delete()
+        
+        return Response({
+            "success": True,
+            "message": "Task deleted successfully."
+        })
 
 class SessionViewSet(viewsets.ModelViewSet):
     """
@@ -273,63 +368,3 @@ class SessionViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-class TaskViewSet(viewsets.ModelViewSet):
-    """
-    GET /taskcontainers/<task_container_pk>/tasks/
-    POST /taskcontainers/<task_container_pk>/tasks/
-    PUT, DELETE /tasks/<pk>/
-    """
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Task.objects.filter(task_container__project__category__user=self.request.user)
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        task_container_id = kwargs.get('task_container_pk')
-        try:
-            task_container = TaskContainer.objects.get(pk=task_container_id, project__category__user=request.user)
-        except TaskContainer.DoesNotExist:
-            raise Http404("Task Container does not exist")
-        
-        if task_container.project.category.locked or task_container.is_completed:
-            return Response({"error": "Cannot create a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
-
-        data['task_container'] = task_container_id
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.task_container.project.category.locked:
-            return Response({"error": "Cannot update a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
-        
-        if 'is_completed' in request.data:
-            if instance.is_completed:
-                return Response({"error": "Cannot update a completed task."}, status=status.HTTP_400_BAD_REQUEST)
-            instance.is_completed = True
-            instance.save()
-            
-            task_container_tasks = Task.objects.filter(task_container=instance.task_container)
-            if all([task.is_completed for task in task_container_tasks]):
-                instance.task_container.is_completed = True
-                instance.task_container.save()
-        
-        elif 'title' in request.data:
-            return Response({"error": "Cannot update the title of a task."}, status=status.HTTP_403_FORBIDDEN)
-        
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.task_container.project.category.locked:
-            return Response({"error": "Cannot delete a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
-        
-        instance.delete()
-        return Response({"message": "Task deleted.", "success": True})
