@@ -124,6 +124,9 @@ class ProjectTaskContainersAPIView(APIView):
         except TaskContainer.DoesNotExist:
             return Response({"error": "Task container does not exist."}, status=status.HTTP_404_NOT_FOUND)
         
+        if task_container.is_completed:
+            return Response({"error": "Cannot update a completed task container."}, status=status.HTTP_403_FORBIDDEN)
+        
         if not 'title' in request.data:
             return Response({"error": "Title is required."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -254,7 +257,7 @@ class TaskContainerTasksAPIView(APIView):
 
         if task_container.project.category.locked or task_container.is_completed:
             return Response({"error": "Cannot create a task in a locked task container."}, status=status.HTTP_403_FORBIDDEN)
-        
+
         request.data['task_container'] = task_container.id
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
@@ -287,7 +290,10 @@ class TaskContainerTasksAPIView(APIView):
             if all([task.is_completed for task in task_container_tasks]):
                 task_container.is_completed = True
                 task_container.save()
-        if 'title' in request.data:
+        elif 'title' in request.data:
+            if task_container.is_completed:
+                return Response({"error": "Cannot update the title of a completed task."}, status=status.HTTP_403_FORBIDDEN)
+            
             try:
                 task.title = request.data['title']
             except ValueError:
