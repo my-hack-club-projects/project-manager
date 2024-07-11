@@ -17,13 +17,18 @@ import AddTaskForm from './AddTaskForm.vue'
 import TaskList from './TaskList.vue'
 
 export default {
+    props: {
+        title: String,
+        tasks: Array
+    },
     components: {
         AddTaskForm,
         TaskList,
     },
     data() {
         return {
-            tasks: ["HTML", "CSS", "JS", "Bootstrap"]
+            title: '',
+            tasks: []
         }
     },
     methods: {
