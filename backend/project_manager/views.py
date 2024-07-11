@@ -1,9 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.http import Http404
-from .models import Category, Project, TaskContainer, Task, Session 
-from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer, SessionSerializer
+from .models import Category, Project, TaskContainer, Task, Session, Note
+from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer, SessionSerializer, NoteSerializer
 
 """
 Strict rules for returning responses:
@@ -502,3 +501,85 @@ class SessionViewSet(viewsets.ModelViewSet):
             "success": False,
             "message": "Sessions cannot be deleted directly."
         }, status=status.HTTP_403_FORBIDDEN)
+    
+class NoteViewSet(viewsets.ModelViewSet):
+    """
+    GET, POST /notes/
+    GET /notes/?session=<session_id>
+    GET /notes/<pk>/
+    PUT, DELETE /notes/<pk>/
+    """
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Note.objects.filter(session__project__category__user=self.request.user)
+        session_id = self.request.query_params.get('session', None)
+        if session_id is not None:
+            queryset = queryset.filter(session_id=session_id)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        
+        try:
+            session_id = data.get('session')
+            session = Session.objects.get(pk=session_id, project__category__user=request.user)
+        except Session.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "Session does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        if not session.active:
+            return Response({
+                "success": False,
+                "message": "Cannot create a note in an inactive session."
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return Response({
+            "success": True,
+            "message": "Note created successfully.",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance.session.active:
+            return Response({
+                "success": False,
+                "message": "Cannot update a note in an inactive session."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            instance.content = request.data.get('content', instance.content)
+        except ValueError:
+            return Response({
+                "success": False,
+                "message": "Content must be a string."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        instance.save()
+        serializer = self.get_serializer(instance)
+        
+        return Response({
+            "success": True,
+            "message": "Note updated successfully.",
+            "data": serializer.data
+        })
+    
+    def destroy(self, request, *args, **kwargs):
+        # You can delete notes even if the session is inactive - privacy reasons
+        instance = self.get_object()
+        
+        instance.delete()
+
+        return Response({
+            "success": True,
+            "message": "Note deleted successfully."
+        })

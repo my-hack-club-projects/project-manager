@@ -250,7 +250,43 @@ class ProjectManagerTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['data']['active'], False)
 
+        self.session.active = True
+        self.session.save()
+
     def test_attempt_delete_session(self):
         response = self.client.delete(f'/api/sessions/{self.session.id}/')
 
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Test notes
+    def test_get_notes(self):
+        response = self.client.get('/api/notes/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 0)
+
+    def test_create_delete_note(self):
+        response = self.client.post('/api/notes/', {
+            'session': self.session.id,
+            'content': 'New Note',
+            'user': self.user.id
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        response = self.client.delete(f'/api/notes/{response.json()["data"]["id"]}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_attempt_create_note_in_inactive_session(self):
+        response = self.client.put(f'/api/sessions/{self.session.id}/', {
+            'active': False
+            })
+
+        response = self.client.post('/api/notes/', {
+            'session': self.session.id,
+            'content': 'New Note',
+            'user': self.user.id
+            })
+        
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
