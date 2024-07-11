@@ -31,34 +31,6 @@
     </div>
     <!-- end session info -->
 
-    <!-- card container -->
-    <!-- <div class="container mx-auto mt-6">
-      <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
-      <div class="flex flex-col">
-        <div class="bg-slate-200 rounded-lg shadow-md px-4 py-2">
-          <h3 class="text-sm font-bold mb-2">Some big milestone</h3>
-
-          <div class="flex items-center mb-4">
-            <input id="default-checkbox" disabled readonly checked type="checkbox" value="1"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 mr-2">
-            <label for="default-checkbox" class="text-sm font-bold">Step one</label>
-          </div>
-
-          <div class="flex items-center my-2">
-            <input id="default-checkbox" disabled readonly checked type="checkbox" value="1"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 mr-2">
-            <span class="text-sm font-bold">Another step</span>
-          </div>
-
-          <div class="flex items-center my-2">
-            <input id="default-checkbox" disabled readonly checked type="checkbox" value="1"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 mr-2">
-            <span class="text-sm font-bold">Almost there!</span>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <!-- new card container -->
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
