@@ -18,8 +18,7 @@
 <script>
 import TaskContainer from '../components/task/TaskContainer.vue'
 import SessionInfo from '../components/project/SessionInfo.vue'
-import AddTaskForm from '@/components/task/AddTaskForm.vue';
-import { assert } from 'console';
+import AddTaskForm from '../components/task/AddTaskForm.vue';
 
 export default {
   components: {
