@@ -1,7 +1,7 @@
 <template>
     <div @click="onSessionInfoClicked"
         class="container flex items-center justify-between mx-auto p-4 bg-slate-200 rounded-lg shadow-md">
-        <h2 class="text-3xl font-bold mb-4 mt-2 w-full">A very long descriptive Name of this project</h2>
+        <h2 class="text-3xl font-bold mb-4 mt-2 w-full">{{ project_name }}</h2>
         <div class="flex flex-col items-center p-2 bg-slate-100 rounded-md shadow-sm w-full hover:cursor-pointer">
             <div class="flex items-center justify-start w-full">
                 <button @click.stop="onPauseButtonClicked" class="rounded-full p-1 flex items-center justify-center">
@@ -31,6 +31,9 @@
 
 <script>
 export default {
+    props: {
+        project_name: String,
+    },
     methods: {
         onSessionInfoClicked() {
             console.log('Div clicked');

@@ -28,7 +28,7 @@ const router = createRouter({
       children: [
         { path: '', component: () => import('../views/ProjectListView.vue') },
         { path: 'analytics', component: () => import('../views/ProjectAnalytics.vue')},
-        { path: ':projectId(\\d+)/view', component: () => import('../views/ProjectView.vue') },
+        { path: ':categoryId(\\d+)/:projectId(\\d+)/view', component: () => import('../views/ProjectView.vue') },
       ]
     },
   ]

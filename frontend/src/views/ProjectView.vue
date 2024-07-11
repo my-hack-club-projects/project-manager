@@ -1,6 +1,6 @@
 <template>
   <div class="h-full py-4">
-    <SessionInfo />
+    <SessionInfo :project_name="project_name" />
 
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
@@ -24,12 +24,25 @@ export default {
   },
   data() {
     return {
+      project_name: '',
       taskContainers: []
     }
   },
   async created() {
+    const categoryId = this.$route.params.categoryId
     const projectId = this.$route.params.projectId
+
     try {
+      // Get the project title
+      const { data: projects } = await axios.get(`/api/categories/${categoryId}/projects`)
+      const project = projects.find(project => project.id == projectId)
+
+      if (project) {
+        this.project_name = project.name
+      } else {
+        console.error('Project not found')
+      }
+
       // Get all task containers
       const { data: containers } = await axios.get(`/api/projects/${projectId}/taskcontainers`)
       // Get all tasks within them
@@ -37,8 +50,10 @@ export default {
         const { data: tasks } = await axios.get(`/api/taskcontainers/${container.id}/tasks`)
         return { ...container, tasks }
       }))
+
       // Log the data to the console (formatted as JSON)
       console.log(JSON.stringify(containersWithTasks, null, 2))
+
       // Set the taskContainers data property to the processed data
       this.taskContainers = containersWithTasks
     } catch (error) {
