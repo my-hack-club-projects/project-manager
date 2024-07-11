@@ -5,8 +5,8 @@
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
-        <TaskContainer v-for="(container, index) in taskContainers" :key="index" :title="container.title"
-          :is_completed="container.is_completed" :tasks="container.tasks" />
+        <TaskContainer v-for="(container, index) in taskContainers" :key="index" :id="container.id"
+          :title="container.title" :is_completed="container.is_completed" :tasks="container.tasks" />
       </div>
     </div>
   </div>

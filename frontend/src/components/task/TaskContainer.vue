@@ -17,6 +17,7 @@ import TaskList from './TaskList.vue'
 
 export default {
     props: {
+        id: Number,
         title: String,
         tasks: Array
     },
@@ -26,21 +27,65 @@ export default {
     },
     methods: {
         addTask(task) {
-            // TODO: send request to the server, if successful, add the response to the tasks array
-            this.tasks.push({ // DEMO: add the task to the tasks array
-                id: this.tasks.length + 1,
-                title: task,
-                is_completed: false
+            fetch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    title: task,
+                })
+            }).then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('Failed to add task')
+            }).then(data => {
+                this.tasks.push(data)
+            }).catch(error => {
+                console.error('Error adding task:', error)
             })
         },
         deleteTask(taskIndex) {
+            // There is no delete endpoint lol
             this.tasks.splice(taskIndex, 1)
         },
-        editTask({ index, newText }) {
+        editTask({ taskIndex, newText }) {
+            fetch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    id: this.tasks[taskIndex].id,
+                    title: newText,
+                })
+            }).then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('Failed to edit task')
+            }).then(data => {
+                this.tasks.splice(taskIndex, 1, data)
+            }).catch(error => {
+                console.error('Error editing task:', error)
+            })
+
             this.tasks.splice(index, 1, { ...this.tasks[index], title: newText })
         },
         toggleComplete(taskIndex) {
-            this.tasks[taskIndex].is_completed = !this.tasks[taskIndex].is_completed
+            fetch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    id: this.tasks[taskIndex].id,
+                    is_completed: true,
+                })
+            }).then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('Failed to edit task')
+            }).then(data => {
+                this.tasks.splice(index, 1, data)
+            }).catch(error => {
+                console.error('Error editing task:', error)
+            })
+
+            this.tasks[taskIndex].is_completed = true
         }
     }
 }
