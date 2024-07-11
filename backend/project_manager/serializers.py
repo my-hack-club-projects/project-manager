@@ -4,12 +4,12 @@ from .models import Category, Project, TaskContainer, Task, Session, Note
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'user']
+        fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'name', 'category']
+        fields = '__all__'
 
 class TaskContainerSerializer(serializers.ModelSerializer):
     class Meta:
