@@ -1,7 +1,9 @@
 <template>
     <ul>
-        <Task v-for="(task, index) in tasks" :key="index" :task="task" @delete-task="deleteTask(index)"
-            @edit-task="editTask(index)" />
+        <Task v-for="(task, index) in tasks" :key="task.id" :id="task.id" :task="task.title"
+            :completed="task.is_completed" @delete-task="$emit('delete-task', index)"
+            @edit-task="(newText) => $emit('edit-task', { index, newText })"
+            @toggle-complete="$emit('toggle-complete', index)" />
     </ul>
 </template>
 
@@ -9,21 +11,11 @@
 import Task from './Task.vue'
 
 export default {
-    components: {
-        Task,
-    },
     props: {
         tasks: Array
     },
-    methods: {
-        deleteTask(index) {
-            this.$emit('delete-task', index)
-        },
-        editTask(index) {
-            return newText => {
-                this.$emit('edit-task', { index, newText })
-            }
-        }
+    components: {
+        Task
     }
 }
 </script>

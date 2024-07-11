@@ -1,7 +1,7 @@
 <template>
     <li class="border-b border-gray-200 bg-slate-100 flex items-center justify-between px-4 py-4 my-2 rounded-2xl">
         <label class="flex items-center">
-            <input type="checkbox" class="mr-2" v-model="completed" @change="toggleComplete" />
+            <input type="checkbox" class="mr-2" :checked="completed" @change="toggleComplete" />
             <span :class="{ 'completed': completed }">{{ task }}</span>
         </label>
         <div>
@@ -14,19 +14,16 @@
 <script>
 export default {
     props: {
-        task: String
-    },
-    data() {
-        return {
-            completed: false
-        }
+        id: Number,
+        task: String,
+        completed: Boolean
     },
     methods: {
         toggleComplete() {
-            this.completed = !this.completed
+            this.$emit('toggle-complete')
         },
         editTask() {
-            const newText = prompt('Enter new task', this.task)
+            const newText = prompt('Enter new name', this.task)
             if (newText !== null) {
                 this.$emit('edit-task', newText.trim())
             }

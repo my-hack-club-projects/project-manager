@@ -2,10 +2,9 @@
     <div class="container my-5">
         <div class="w-full">
             <div class="bg-slate-200 rounded-lg shadow-md p-6 w-full">
-                <h1 class="text-lg font-bold">
-                    Some milestone
-                </h1>
-                <TaskList :tasks="tasks" @delete-task="deleteTask" @edit-task="editTask" />
+                <h1 class="text-lg font-bold">{{ title }}</h1>
+                <TaskList :tasks="tasks" @delete-task="deleteTask" @edit-task="editTask"
+                    @toggle-complete="toggleComplete" />
                 <AddTaskForm @add-task="addTask" />
             </div>
         </div>
@@ -25,12 +24,6 @@ export default {
         AddTaskForm,
         TaskList,
     },
-    data() {
-        return {
-            title: '',
-            tasks: []
-        }
-    },
     methods: {
         addTask(task) {
             this.tasks.push(task)
@@ -39,7 +32,10 @@ export default {
             this.tasks.splice(taskIndex, 1)
         },
         editTask({ index, newText }) {
-            this.tasks.splice(index, 1, newText)
+            this.tasks.splice(index, 1, { ...this.tasks[index], task: newText })
+        },
+        toggleComplete(taskIndex) {
+            this.tasks[taskIndex].completed = !this.tasks[taskIndex].completed
         }
     }
 }
