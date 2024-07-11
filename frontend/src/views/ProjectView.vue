@@ -80,7 +80,6 @@ export default {
         return { ...container, tasks }
       }))
 
-      // Set the taskContainers data property to the processed data
       this.taskContainers = containersWithTasks
     } catch (error) {
       console.error('Error fetching data:', error)
