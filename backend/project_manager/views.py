@@ -20,8 +20,6 @@ Strict rules for returning responses:
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     GET /categories/
-    POST /categories/
-    PUT, DELETE /categories/<pk>/
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
