@@ -55,7 +55,7 @@ export default {
             }).then(response => {
                 this.tasks.push(response.data)
             }).catch(error => {
-                console.error('Error adding task:', error)
+                alert(error.response.data.error)
             })
         },
         deleteTask(taskIndex) {
@@ -64,18 +64,17 @@ export default {
             }).then(() => {
                 this.tasks.splice(taskIndex, 1)
             }).catch(error => {
-                console.error('Error deleting task:', error)
+                alert(error.response.data.error)
             })
         },
         editTask(taskIndex, newText) {
-            console.log('Editing task:', taskIndex, newText)
             this.$http.put(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
                 id: this.tasks[taskIndex].id,
                 title: newText,
             }).then(response => {
                 this.tasks.splice(taskIndex, 1, response.data)
             }).catch(error => {
-                console.error('Error editing task:', error)
+                alert(error.response.data.error)
             })
 
         },
@@ -86,7 +85,7 @@ export default {
             }).then(response => {
                 this.tasks.splice(taskIndex, 1, response.data)
             }).catch(error => {
-                console.error('Error editing task:', error)
+                alert(error.response.data.error)
             })
         },
 

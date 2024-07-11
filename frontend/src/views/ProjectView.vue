@@ -40,7 +40,7 @@ export default {
       }).then(response => {
         this.taskContainers.push(response.data)
       }).catch(error => {
-        console.error('Error adding task container:', error)
+        alert(error.response.data.message)
       })
     },
     deleteTaskContainer(taskContainerId) {
@@ -51,7 +51,7 @@ export default {
       }).then(() => {
         this.taskContainers.splice(taskContainerIndex, 1)
       }).catch(error => {
-        console.error('Error deleting task container:', error)
+        alert(error.response.data.error)
       })
     },
     editTaskContainer(taskContainerId, newTitle) {
@@ -63,7 +63,7 @@ export default {
       }).then(response => {
         this.taskContainers.splice(taskContainerIndex, 1, response.data)
       }).catch(error => {
-        console.error('Error editing task container:', error)
+        alert(error.response.data.error)
       })
     }
   },
