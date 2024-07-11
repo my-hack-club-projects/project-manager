@@ -32,7 +32,7 @@
     <!-- end session info -->
 
     <!-- card container -->
-    <div class="container mx-auto mt-6">
+    <!-- <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
         <div class="bg-slate-200 rounded-lg shadow-md px-4 py-2">
@@ -57,12 +57,27 @@
           </div>
         </div>
       </div>
+    </div> -->
+
+    <!-- new card container -->
+    <div class="container mx-auto mt-6">
+      <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
+      <div class="flex flex-col">
+        <TaskContainer />
+        <TaskContainer />
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
+import TaskContainer from '../components/task/TaskContainer.vue'
+
 export default {
+  components: {
+    TaskContainer
+  },
   methods: {
     onSessionInfoClicked() {
       console.log('Div clicked');
