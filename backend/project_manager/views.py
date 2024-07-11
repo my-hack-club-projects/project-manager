@@ -5,6 +5,18 @@ from django.http import Http404
 from .models import Category, Project, TaskContainer, Session, Task
 from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, SessionSerializer, TaskSerializer
 
+"""
+Strict rules for returning responses:
+- Always return a Response object
+- Always return a dictionary with a key "success" that is True or False
+- Always return a dictionary with a key "message" that is a string
+
+- Always return a 400 status code if the request is invalid
+- Always return a 403 status code if the request is forbidden
+- Always return a 404 status code if the resource does not exist
+- Always return a 2XX status code if the request is successful.
+"""
+
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     GET /categories/
@@ -17,6 +29,28 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+    
+    def create(self, request, *args, **kwargs):
+        # Categories cannot be created by the user directly
+        return Response({
+            "success": False,
+            "message": "Categories cannot be created directly."
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    def update(self, request, *args, **kwargs):
+        # Categories cannot be updated by the user directly
+        return Response({
+            "success": False,
+            "message": "Categories cannot be updated directly."
+        }, status=status.HTTP_403_FORBIDDEN)
+    
+    def destroy(self, request, *args, **kwargs):
+        # Categories cannot be deleted by the user directly
+        return Response({
+            "success": False,
+            "message": "Categories cannot be deleted directly."
+        }, status=status.HTTP_403_FORBIDDEN)
+
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
