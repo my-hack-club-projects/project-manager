@@ -35,10 +35,11 @@ export default {
   },
   methods: {
     addTaskContainer(title) {
-      this.$http.post(`http://localhost:8000/api/projects/${this.$route.params.projectId}/taskcontainers/`, {
+      this.$http.post(`/api/taskcontainers/`, {
+        project: this.$route.params.projectId,
         title: title,
       }).then(response => {
-        this.taskContainers.push(response.data)
+        this.taskContainers.push(response.data.data)
       }).catch(error => {
         alert(error.response.data.message)
       })
@@ -46,24 +47,21 @@ export default {
     deleteTaskContainer(taskContainerId) {
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
 
-      this.$http.delete(`http://localhost:8000/api/projects/${this.$route.params.projectId}/taskcontainers/`, {
-        id: taskContainerId,
-      }).then(() => {
+      this.$http.delete(`/api/taskcontainers/${taskContainerId}/`).then(() => {
         this.taskContainers.splice(taskContainerIndex, 1)
       }).catch(error => {
-        alert(error.response.data.error)
+        alert(error.response.data.message)
       })
     },
     editTaskContainer(taskContainerId, newTitle) {
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
 
-      this.$http.put(`http://localhost:8000/api/projects/${this.$route.params.projectId}/taskcontainers/`, {
-        id: taskContainerId,
+      this.$http.put(`/api/taskcontainers/${taskContainerId}/`, {
         title: newTitle,
       }).then(response => {
-        this.taskContainers.splice(taskContainerIndex, 1, response.data)
+        this.taskContainers.splice(taskContainerIndex, 1, response.data.data)
       }).catch(error => {
-        alert(error.response.data.error)
+        alert(error.response.data.message)
       })
     }
   },
@@ -72,26 +70,15 @@ export default {
     const projectId = this.$route.params.projectId
 
     try {
-      // Get the project title
-      const { data: projects } = await this.$http.get(`/api/categories/${categoryId}/projects`)
-      const project = projects.find(project => project.id == projectId)
+      const { data: project } = await this.$http.get(`/api/projects/${projectId}`)
 
-      if (project) {
-        this.project_name = project.name
-      } else {
-        console.error('Project not found')
-      }
+      this.project_name = project.name
 
-      // Get all task containers
-      const { data: containers } = await this.$http.get(`/api/projects/${projectId}/taskcontainers`)
-      // Get all tasks within them
+      const { data: containers } = await this.$http.get(`/api/taskcontainers/?project=${projectId}`)
       const containersWithTasks = await Promise.all(containers.map(async container => {
-        const { data: tasks } = await this.$http.get(`/api/taskcontainers/${container.id}/tasks`)
+        const { data: tasks } = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
         return { ...container, tasks }
       }))
-
-      // Log the data to the console (formatted as JSON)
-      console.log(JSON.stringify(containersWithTasks, null, 2))
 
       // Set the taskContainers data property to the processed data
       this.taskContainers = containersWithTasks
