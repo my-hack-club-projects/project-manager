@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.http import Http404
-from .models import Category, Project, TaskContainer, Session, Task
-from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, SessionSerializer, TaskSerializer
+from .models import Category, Project, TaskContainer, Task, Session 
+from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer, SessionSerializer
 
 """
 Strict rules for returning responses:
