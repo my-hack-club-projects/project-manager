@@ -59,7 +59,8 @@ export default {
       this.$http.put(`/api/taskcontainers/${taskContainerId}/`, {
         title: newTitle,
       }).then(response => {
-        this.taskContainers.splice(taskContainerIndex, 1, response.data.data)
+        const newTitleFromResponse = response.data.data.title
+        this.taskContainers[taskContainerIndex].title = newTitleFromResponse
       }).catch(error => {
         alert(error.response.data.message)
       })
