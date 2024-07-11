@@ -25,7 +25,7 @@
 
         <!-- session progress bar -->
         <div class="w-full bg-slate-300 h-2 rounded-full mt-2">
-          <div class="bg-blue-500 h-2 rounded-full w-3/12"></div>
+          <div class="bg-gradient-to-br from-cyan-400 to-blue-500 h-2 rounded-full w-3/12"></div>
         </div>
       </div>
     </div>
