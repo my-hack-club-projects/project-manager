@@ -3,7 +3,7 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
 </script>
 
 <template>
-  <div class="bg-gray-100 h-full">
+  <div class="h-full">
     <div class="container mx-auto p-4">
       <h2 class="text-2xl font-bold mb-4 mt-2">Your projects</h2>
       <div class="flex flex-col">
