@@ -126,3 +126,29 @@ class ProjectManagerTests(APITestCase):
             })
         
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Test task containers
+    def test_get_task_containers(self):
+        response = self.client.get('/api/taskcontainers/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 1) # One task container that we created in setUp
+
+    def test_get_task_containers_in_project(self):
+        response = self.client.get(f'/api/taskcontainers/?project={self.project.id}')
+        count_from_db = TaskContainer.objects.filter(project=self.project).count()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), count_from_db)
+
+    def test_create_delete_task_container(self):
+        response = self.client.post('/api/taskcontainers/', {
+            'project': self.project.id,
+            'title': 'New Task Container'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        response = self.client.delete(f'/api/taskcontainers/{response.json()["data"]["id"]}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
