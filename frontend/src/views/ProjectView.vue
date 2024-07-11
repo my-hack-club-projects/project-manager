@@ -1,6 +1,6 @@
 <template>
   <div class="h-full py-4">
-    <SessionInfo :project_name="project_name" />
+    <SessionInfo :project="project" />
 
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      project_name: '',
+      project: '',
       taskContainers: []
     }
   },
@@ -76,7 +76,7 @@ export default {
     try {
       const { data: project } = await this.$http.get(`/api/projects/${projectId}`)
 
-      this.project_name = project.name
+      this.project = project
 
       const { data: containers } = await this.$http.get(`/api/taskcontainers/?project=${projectId}`)
       const containersWithTasks = await Promise.all(containers.map(async container => {
