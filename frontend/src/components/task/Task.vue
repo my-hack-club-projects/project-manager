@@ -1,7 +1,7 @@
 <template>
     <li class="border-b border-gray-200 bg-slate-100 flex items-center justify-between px-4 py-4 my-2 rounded-2xl">
         <label class="flex items-center">
-            <input type="checkbox" class="mr-2" :checked="completed" @change="toggleComplete" />
+            <input type="checkbox" class="mr-2" :checked="completed" :disabled="completed" @change="toggleComplete" />
             <span :class="{ 'completed': completed }">{{ task }}</span>
         </label>
         <div>
@@ -20,6 +20,8 @@ export default {
     },
     methods: {
         toggleComplete() {
+            if (this.completed) return
+
             this.$emit('toggle-complete')
         },
         editTask() {

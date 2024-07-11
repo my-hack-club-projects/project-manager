@@ -35,7 +35,7 @@ export default {
             this.tasks.splice(index, 1, { ...this.tasks[index], task: newText })
         },
         toggleComplete(taskIndex) {
-            this.tasks[taskIndex].completed = !this.tasks[taskIndex].completed
+            this.tasks[taskIndex].is_completed = !this.tasks[taskIndex].is_completed
         }
     }
 }
