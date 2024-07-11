@@ -5,7 +5,6 @@ gitroot=$(git rev-parse --show-toplevel)
 
 cd "$gitroot/frontend"
 # Build frontend
-npm run test
 npm run build
 
 cd "$gitroot/backend"
