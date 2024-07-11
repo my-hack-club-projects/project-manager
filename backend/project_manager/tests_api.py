@@ -50,3 +50,65 @@ class ProjectManagerTests(APITestCase):
         response = self.client.delete(f'/api/categories/{self.category1.id}/')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Test projects
+    def test_get_projects(self):
+        response = self.client.get('/api/projects/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.json()), 1) # One project that we created in setUp
+
+    def test_create_delete_project(self):
+        response = self.client.post('/api/projects/', {
+            'category': self.category1.id,
+            'name': 'New Project'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # remove the project we just created
+        project_id = response.json()['data']['id']
+        response = self.client.delete(f'/api/projects/{project_id}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_move_project_to_archive(self):
+        response = self.client.put(f'/api/projects/{self.project.id}/', {
+            'category': self.category2.id,
+            'name': 'Test Project'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['data']['category'], self.category2.id)
+
+    def test_move_project_from_archive(self):
+        response = self.client.put(f'/api/projects/{self.project.id}/', {
+            'category': self.category1.id,
+            'name': 'Test Project'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['data']['category'], self.category1.id)
+
+    def test_rename_project(self):
+        response = self.client.put(f'/api/projects/{self.project.id}/', { # move it first
+            'category': self.category1.id
+            })
+        
+        response = self.client.put(f'/api/projects/{self.project.id}/', {
+            'name': 'Renamed Project'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['data']['name'], 'Renamed Project')
+
+    def test_rename_project_in_archive(self):
+        response = self.client.put(f'/api/projects/{self.project.id}/', { # move it first
+            'category': self.category2.id
+            })
+        
+        response = self.client.put(f'/api/projects/{self.project.id}/', {
+            'name': 'Renamed Project'
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -87,7 +87,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        
+
         self.perform_create(serializer)
 
         return Response({
@@ -95,6 +95,46 @@ class ProjectViewSet(viewsets.ModelViewSet):
             "message": "Project created successfully.",
             "data": serializer.data
         }, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.category.locked and not 'category' in request.data:
+            return Response({
+                "success": False,
+                "message": "Cannot update a project in a locked category."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        if 'name' in request.data:
+            instance.name = request.data['name']
+        if 'category' in request.data:
+            try:
+                category_id = request.data['category']
+                category = Category.objects.get(pk=category_id, user=request.user)
+                instance.category = category
+            except Category.DoesNotExist:
+                return Response({
+                    "success": False,
+                    "message": "Category does not exist."
+                }, status=status.HTTP_404_NOT_FOUND)
+        
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response({
+            "success": True,
+            "message": "Project updated successfully.",
+            "data": serializer.data
+        })
+    
+    def destroy(self, request, *args, **kwargs):
+        # You can delete projects even if they are in a locked category
+        instance = self.get_object()
+
+        instance.delete()
+        return Response({
+            "success": True,
+            "message": "Project deleted successfully."
+        })
+    
 class TaskContainerViewSet(viewsets.ModelViewSet):
     """
     GET /projects/<project_pk>/taskcontainers/
