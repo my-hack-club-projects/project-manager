@@ -16,7 +16,7 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
           <h3 class="text-sm font-bold mb-2">{{ category.name }}</h3>
 
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <ProjectCard v-for="(project, index) in category.projects" :key="index" :project="project" />
+            <ProjectCard v-for="(project, index) in category.projects" :key="index" :category="category" :project="project" />
           </div>
         </div>
       </div>

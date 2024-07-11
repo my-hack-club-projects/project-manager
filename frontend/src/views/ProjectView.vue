@@ -38,7 +38,11 @@ export default {
         project: this.$route.params.projectId,
         title: title,
       }).then(response => {
-        this.taskContainers.push(response.data.data)
+        const taskContainer = response.data.data
+
+        taskContainer.tasks = []
+
+        this.taskContainers.push(taskContainer)
       }).catch(error => {
         alert(error.response.data.message)
       })
@@ -76,7 +80,10 @@ export default {
 
       const { data: containers } = await this.$http.get(`/api/taskcontainers/?project=${projectId}`)
       const containersWithTasks = await Promise.all(containers.map(async container => {
-        const { data: tasks } = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
+        let { data: tasks } = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
+
+        console.log(tasks)
+
         return { ...container, tasks }
       }))
 
