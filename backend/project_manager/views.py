@@ -75,7 +75,7 @@ class ProjectTaskContainersAPIView(APIView):
     POST:
     Create a new task container in the project.
 
-    PUT:
+    PATCH:
     Rename a task container. You can not mark a task container as completed or change any of the other properties.
 
     Example POST data:
@@ -110,7 +110,7 @@ class ProjectTaskContainersAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, pk):
+    def patch(self, request, pk):
         if not 'id' in request.data:
             return Response({"error": "Task container ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
