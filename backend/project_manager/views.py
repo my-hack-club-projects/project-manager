@@ -210,7 +210,7 @@ class TaskContainerTasksAPIView(APIView):
     POST:
     Create a new task in the task container.
 
-    PUT:
+    PATCH:
     Mark a task as completed or change the title. You can not mark a task as incomplete or change any of the other properties.
 
     Example POST data:
@@ -245,7 +245,7 @@ class TaskContainerTasksAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request, pk):
+    def patch(self, request, pk):
         if not 'id' in request.data:
             return Response({"error": "Task ID is required."}, status=status.HTTP_400_BAD_REQUEST)
         
