@@ -67,8 +67,9 @@ export default {
                 console.error('Error deleting task:', error)
             })
         },
-        editTask({ taskIndex, newText }) {
-            this.$http.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+        editTask(taskIndex, newText) {
+            console.log('Editing task:', taskIndex, newText)
+            this.$http.put(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
                 id: this.tasks[taskIndex].id,
                 title: newText,
             }).then(response => {
@@ -79,7 +80,7 @@ export default {
 
         },
         toggleComplete(taskIndex) {
-            this.$http.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+            this.$http.put(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
                 id: this.tasks[taskIndex].id,
                 is_completed: true,
             }).then(response => {

@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     addTaskContainer(title) {
-      this.$http.post(`http://localhost:8000/api/projects/${this.projectId}/taskcontainers/`, {
+      this.$http.post(`http://localhost:8000/api/projects/${this.$route.params.projectId}/taskcontainers/`, {
         title: title,
       }).then(response => {
         this.taskContainers.push(response.data)
@@ -46,7 +46,7 @@ export default {
     deleteTaskContainer(taskContainerId) {
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
 
-      this.$http.delete(`http://localhost:8000/api/projects/${this.projectId}/taskcontainers/`, {
+      this.$http.delete(`http://localhost:8000/api/projects/${this.$route.params.projectId}/taskcontainers/`, {
         id: taskContainerId,
       }).then(() => {
         this.taskContainers.splice(taskContainerIndex, 1)
@@ -54,14 +54,13 @@ export default {
         console.error('Error deleting task container:', error)
       })
     },
-    editTaskContainer({ taskContainerId, newTitle }) {
+    editTaskContainer(taskContainerId, newTitle) {
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
 
-      this.$http.patch(`http://localhost:8000/api/projects/${this.projectId}/taskcontainers/`, {
+      this.$http.put(`http://localhost:8000/api/projects/${this.$route.params.projectId}/taskcontainers/`, {
         id: taskContainerId,
         title: newTitle,
       }).then(response => {
-        console.log('Response:', response.data)
         this.taskContainers.splice(taskContainerIndex, 1, response.data)
       }).catch(error => {
         console.error('Error editing task container:', error)
