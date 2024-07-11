@@ -36,8 +36,6 @@
 import AddTaskForm from './AddTaskForm.vue'
 import TaskList from './TaskList.vue'
 
-import axios from 'axios'
-
 export default {
     props: {
         id: Number,
@@ -50,7 +48,7 @@ export default {
     },
     methods: {
         addTask(task) {
-            axios.post(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+            this.$http.post(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
                 title: task,
             }).then(response => {
                 this.tasks.push(response.data)
@@ -63,7 +61,7 @@ export default {
             this.tasks.splice(taskIndex, 1)
         },
         editTask({ taskIndex, newText }) {
-            axios.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+            this.$http.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
                 id: this.tasks[taskIndex].id,
                 title: newText,
             }).then(response => {
@@ -74,7 +72,7 @@ export default {
 
         },
         toggleComplete(taskIndex) {
-            axios.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
+            this.$http.patch(`http://localhost:8000/api/taskcontainers/${this.id}/tasks/`, {
                 id: this.tasks[taskIndex].id,
                 is_completed: true,
             }).then(response => {

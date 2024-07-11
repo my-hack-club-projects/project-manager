@@ -19,8 +19,6 @@ import TaskContainer from '../components/task/TaskContainer.vue'
 import SessionInfo from '../components/project/SessionInfo.vue'
 import AddTaskForm from '@/components/task/AddTaskForm.vue';
 
-import axios from 'axios'
-
 export default {
   components: {
     TaskContainer,
@@ -39,7 +37,7 @@ export default {
 
     try {
       // Get the project title
-      const { data: projects } = await axios.get(`/api/categories/${categoryId}/projects`)
+      const { data: projects } = await this.$http.get(`/api/categories/${categoryId}/projects`)
       const project = projects.find(project => project.id == projectId)
 
       if (project) {
@@ -49,10 +47,10 @@ export default {
       }
 
       // Get all task containers
-      const { data: containers } = await axios.get(`/api/projects/${projectId}/taskcontainers`)
+      const { data: containers } = await this.$http.get(`/api/projects/${projectId}/taskcontainers`)
       // Get all tasks within them
       const containersWithTasks = await Promise.all(containers.map(async container => {
-        const { data: tasks } = await axios.get(`/api/taskcontainers/${container.id}/tasks`)
+        const { data: tasks } = await this.$http.get(`/api/taskcontainers/${container.id}/tasks`)
         return { ...container, tasks }
       }))
 
