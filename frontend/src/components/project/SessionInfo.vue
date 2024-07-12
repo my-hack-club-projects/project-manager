@@ -1,15 +1,8 @@
     <template>
         <div @click="onSessionInfoClicked"
             class="container grid grid-cols-1 md:grid-cols-2 items-center justify-center mx-auto p-4 gap-4 bg-slate-200 rounded-lg shadow-md hover:cursor-pointer">
-            <div class="flex items-center">
-                <h2 class="text-3xl truncate font-bold mb-4 mt-2 w-full">{{ project.name }}</h2>
-                <button @click.stop="editProject" class="ml-2">
-                    <EditIcon />
-                </button>
-                <button @click.stop="deleteProject" class="ml-2">
-                    <DeleteIcon />
-                </button>
-            </div>
+            <h2 class="text-3xl truncate font-bold mb-4 mt-2 w-full">{{ project.name }}</h2>
+
             <div class="flex flex-col items-center p-2 bg-slate-100 rounded-md shadow-sm text-nowrap w-full">
                 <div class="flex items-center justify-start w-full">
                     <button @click.stop="onPauseButtonClicked"
@@ -40,15 +33,10 @@
 
 <script>
 import EditIcon from '../icons/EditIcon.vue';
-import DeleteIcon from '../icons/DeleteIcon.vue';
 
 export default {
     props: {
         project: Object,
-    },
-    components: {
-        EditIcon,
-        DeleteIcon,
     },
     methods: {
         onSessionInfoClicked() {
