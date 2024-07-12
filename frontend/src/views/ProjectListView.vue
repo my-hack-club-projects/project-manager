@@ -21,6 +21,11 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
               :project="project" />
           </div>
         </div>
+
+        <div v-if="categories.length === 0" class="text-center text-gray-500 mt-4">
+          You have no projects yet. Click <button @click="createProject" class="text-blue-500">here</button> to create
+          one.
+        </div>
       </div>
     </div>
   </div>
