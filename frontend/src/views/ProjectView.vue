@@ -5,7 +5,8 @@
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
-        <draggable v-model="taskContainersCopy" @end="onDragEnd" :itemKey="container => container.id" :options="dragOptions">
+        <draggable v-model="taskContainersCopy" @end="onDragEnd" :itemKey="container => container.id"
+          :options="dragOptions">
           <template #item="{ element }">
             <TaskContainer :key="element.id" :id="element.id" :title="element.title"
               :is_completed="element.is_completed" :tasks="element.tasks" @delete="deleteTaskContainer"
@@ -42,10 +43,11 @@ export default {
   },
   watch: {
     taskContainers: {
-      immediate: true,
       handler(newVal) {
         this.taskContainersCopy = newVal.slice()
-      }
+      },
+      deep: true,
+      immediate: true
     }
   },
   computed: {
@@ -99,7 +101,7 @@ export default {
       })
     },
     taskIsCompleted() {
-      return function(event) {
+      return function (event) {
         const containerId = event.getAttribute('data-id');
         const container = this.taskContainers.find(container => container.id == containerId);
         return container && container.is_completed;
