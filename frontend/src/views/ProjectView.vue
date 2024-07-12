@@ -61,11 +61,8 @@ export default {
           order: index
         }
       })
-      console.log(taskContainersToUpdate)
-      // use /api/taskcontainers/bulk_update/ endpoint
-      this.$http.put(`/api/taskcontainers/bulk_update/`, taskContainersToUpdate).then((response) => {
-        console.log(response)
 
+      this.$http.put(`/api/taskcontainers/bulk_update/`, taskContainersToUpdate).then((response) => {
         for (let i = 0; i < this.taskContainers.length; i++) {
           this.taskContainers[i].order = i
         }
@@ -181,8 +178,6 @@ export default {
       const { data: containers } = await this.$http.get(`/api/taskcontainers/?project=${projectId}`)
       const containersWithTasks = await Promise.all(containers.map(async container => {
         let { data: tasks } = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
-
-        console.log(tasks)
 
         return { ...container, tasks }
       }))
