@@ -57,6 +57,20 @@ export default {
     }
   },
   async created() {
+    // For testing, add a new category with 5 projects.
+    if (process.env.NODE_ENV !== 'production') {
+      this.categories.push({
+        id: 0,
+        name: 'Test category',
+        projects: Array.from({ length: 5 }, (_, i) => ({
+          id: i,
+          name: `Test project ${i + 1}`,
+          description: 'This is a test project',
+          category: 0
+        }))
+      })
+    }
+
     const categories = await this.$http.get('/api/categories/')
 
     for (const category of categories.data) {
