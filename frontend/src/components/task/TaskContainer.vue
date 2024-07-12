@@ -20,29 +20,28 @@
 </template>
 
 <script>
-import AddTaskForm from './AddTaskForm.vue'
-import TaskList from './TaskList.vue'
-import EditIcon from '../icons/EditIcon.vue'
-import DeleteIcon from '../icons/DeleteIcon.vue'
+import AddTaskForm from './AddTaskForm.vue';
+import TaskList from './TaskList.vue';
+import EditIcon from '../icons/EditIcon.vue';
+import DeleteIcon from '../icons/DeleteIcon.vue';
 
 export default {
     props: {
         id: Number,
         title: String,
         is_completed: Boolean,
-
-        tasks: Array,
+        tasks: Array
     },
     components: {
         AddTaskForm,
         TaskList,
         EditIcon,
-        DeleteIcon,
+        DeleteIcon
     },
     data() {
         return {
-            isHovered: false,
-        }
+            isHovered: false
+        };
     },
     methods: {
         addTask(task) {
@@ -50,54 +49,49 @@ export default {
                 title: task,
                 task_container: this.id,
             }).then(response => {
-                this.tasks.push(response.data.data)
+                this.tasks.push(response.data.data);
             }).catch(error => {
-                alert(error.response.data.message)
-            })
+                alert(error.response.data.message);
+            });
         },
         deleteTask(taskIndex, taskId) {
-            this.$http.delete(`/api/tasks/${taskId}/`, {
-                id: this.tasks[taskIndex].id,
-            }).then(() => {
-                this.tasks.splice(taskIndex, 1)
+            this.$http.delete(`/api/tasks/${taskId}/`).then(() => {
+                this.tasks.splice(taskIndex, 1);
             }).catch(error => {
-                alert(error.response.data.message)
-            })
+                alert(error.response.data.message);
+            });
         },
         editTask(taskIndex, taskId, newText) {
             this.$http.put(`/api/tasks/${taskId}/`, {
                 id: this.tasks[taskIndex].id,
                 title: newText,
             }).then(response => {
-                this.tasks.splice(taskIndex, 1, response.data.data)
+                this.tasks.splice(taskIndex, 1, response.data.data);
             }).catch(error => {
-                alert(error.response.data.message)
-            })
-
+                alert(error.response.data.message);
+            });
         },
         toggleComplete(taskIndex, taskId) {
             this.$http.put(`/api/tasks/${taskId}/`, {
                 id: this.tasks[taskIndex].id,
                 is_completed: true,
             }).then(response => {
-                this.tasks.splice(taskIndex, 1, response.data.data)
+                this.tasks.splice(taskIndex, 1, response.data.data);
             }).catch(error => {
-                alert(error.response.data.message)
-            })
+                alert(error.response.data.message);
+            });
         },
-
         deleteSelf() {
-            this.$emit('delete', this.id)
+            this.$emit('delete', this.id);
         },
-
         editSelf() {
-            const newTitle = prompt('Enter new name', this.title)
+            const newTitle = prompt('Enter new name', this.title);
             if (newTitle !== null) {
-                this.$emit('edit', this.id, newTitle.trim())
+                this.$emit('edit', this.id, newTitle.trim());
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>

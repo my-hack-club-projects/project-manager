@@ -5,9 +5,17 @@
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
-        <TaskContainer v-for="(container, index) in taskContainers" :key="index" :id="container.id"
+        <!-- <TaskContainer v-for="(container, index) in taskContainers" :key="index" :id="container.id"
           :title="container.title" :is_completed="container.is_completed" :tasks="container.tasks"
-          @delete="deleteTaskContainer" @edit="editTaskContainer" />
+          @delete="deleteTaskContainer" @edit="editTaskContainer" /> -->
+
+        <draggable v-model="taskContainersCopy" @end="onDragEnd" :itemKey="container => container.id">
+          <template #item="{ element }">
+            <TaskContainer :key="element.id" :id="element.id" :title="element.title"
+              :is_completed="element.is_completed" :tasks="element.tasks" @delete="deleteTaskContainer"
+              @edit="editTaskContainer" />
+          </template>
+        </draggable>
       </div>
 
       <AddTaskForm :placeholder="'New milestone'" @add-task="addTaskContainer" />
@@ -20,20 +28,34 @@
 import TaskContainer from '../components/task/TaskContainer.vue'
 import SessionInfo from '../components/project/SessionInfo.vue'
 import AddTaskForm from '../components/task/AddTaskForm.vue';
+import draggable from 'vuedraggable';
 
 export default {
   components: {
     TaskContainer,
     AddTaskForm,
-    SessionInfo
+    SessionInfo,
+    draggable,
   },
   data() {
     return {
       project: '',
-      taskContainers: []
+      taskContainers: [],
+      taskContainersCopy: []
+    }
+  },
+  watch: {
+    taskContainers: {
+      immediate: true,
+      handler(newVal) {
+        this.taskContainersCopy = newVal.slice()
+      }
     }
   },
   methods: {
+    onDragEnd(event) {
+      console.log('Dragged task list:', this.taskContainersCopy)
+    },
     addTaskContainer(title) {
       this.$http.post(`/api/taskcontainers/`, {
         project: this.$route.params.projectId,
