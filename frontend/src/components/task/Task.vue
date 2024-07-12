@@ -10,7 +10,7 @@
             <button class="mr-4 relative" @click="editTask">
                 <EditIcon :isHovered="isHovered" />
             </button>
-            <button class="mx-2 relative">
+            <button class="mx-2 relative" @click="this.$emit('delete-task')">
                 <DeleteIcon :isHovered="isHovered" />
             </button>
         </div>
