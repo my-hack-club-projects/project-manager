@@ -29,7 +29,6 @@ export default {
     watch: {
         tasks: {
             handler(newVal) {
-                console.log('Tasks updated:', newVal);
                 this.tasksCopy = [...newVal];
             },
             deep: true,
