@@ -6,18 +6,29 @@
             <span class="truncate" :class="{ 'completed': completed }">{{ task }}</span>
         </div>
         <div class="flex-shrink-0 flex items-center">
-            <button class="text-red-500 hover:text-red-700 mr-2" @click="$emit('delete-task')">Delete</button>
-            <button class="text-blue-500 hover:text-blue-700" @click="editTask">Edit</button>
+            <button class="mx-2" @click="$emit('delete-task')">
+                <DeleteIcon />
+            </button>
+            <button class="mx-2" @click="editTask">
+                <EditIcon />
+            </button>
         </div>
     </li>
 </template>
 
 <script>
+import DeleteIcon from '../icons/DeleteIcon.vue';
+import EditIcon from '../icons/EditIcon.vue';
+
 export default {
     props: {
         id: Number,
         task: String,
         completed: Boolean
+    },
+    components: {
+        EditIcon,
+        DeleteIcon
     },
     methods: {
         toggleComplete() {
