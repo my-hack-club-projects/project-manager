@@ -5,11 +5,7 @@
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
-        <!-- <TaskContainer v-for="(container, index) in taskContainers" :key="index" :id="container.id"
-          :title="container.title" :is_completed="container.is_completed" :tasks="container.tasks"
-          @delete="deleteTaskContainer" @edit="editTaskContainer" /> -->
-
-        <draggable v-model="taskContainersCopy" @end="onDragEnd" :itemKey="container => container.id">
+        <draggable v-model="taskContainersCopy" @end="onDragEnd" :itemKey="container => container.id" :options="dragOptions">
           <template #item="{ element }">
             <TaskContainer :key="element.id" :id="element.id" :title="element.title"
               :is_completed="element.is_completed" :tasks="element.tasks" @delete="deleteTaskContainer"
@@ -49,6 +45,14 @@ export default {
       immediate: true,
       handler(newVal) {
         this.taskContainersCopy = newVal.slice()
+      }
+    }
+  },
+  computed: {
+    dragOptions() {
+      return {
+        filter: '.completed',
+        disabled: this.taskIsCompleted
       }
     }
   },
@@ -93,6 +97,13 @@ export default {
       }).catch(error => {
         alert(error.response.data.message)
       })
+    },
+    taskIsCompleted() {
+      return function(event) {
+        const containerId = event.getAttribute('data-id');
+        const container = this.taskContainers.find(container => container.id == containerId);
+        return container && container.is_completed;
+      }
     }
   },
   async created() {
@@ -118,7 +129,7 @@ export default {
         {
           id: 1,
           title: 'Test milestone 2 with a really really looong name lol',
-          is_completed: false,
+          is_completed: true, // Example of a completed container
           tasks: Array.from({ length: 2 }, (_, i) => ({
             id: i,
             title: `Test looooooooooooooooong task ${i + 1}`,

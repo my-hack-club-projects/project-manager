@@ -14,7 +14,8 @@
             </button>
         </div>
 
-        <TaskList :tasks="tasks" @delete-task="deleteTask" @edit-task="editTask" @toggle-complete="toggleComplete" />
+        <TaskList :tasks="tasks" :disable-drag="is_completed" @delete-task="deleteTask" @edit-task="editTask"
+            @toggle-complete="toggleComplete" />
         <AddTaskForm @add-task="addTask" />
     </div>
 </template>
