@@ -164,6 +164,15 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
                 "message": "Cannot update a task container in a locked project."
             }, status=status.HTTP_403_FORBIDDEN)
         
+        if 'order' in data: # Allow order to be updated even if the task container is completed
+            instance.order = data['order']
+
+        if instance.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot update a completed task container."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
         if 'title' in data:
             if instance.is_completed:
                 return Response({
@@ -172,9 +181,6 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
                 }, status=status.HTTP_403_FORBIDDEN)
             
             instance.title = data['title']
-
-        if 'order' in data:
-            instance.order = data['order']
         
         instance.save()
         serializer = self.get_serializer(instance)
@@ -307,7 +313,11 @@ class TaskViewSet(viewsets.ModelViewSet):
                 "success": False,
                 "message": "Cannot update a task in a locked or completed task container."
             }, status=status.HTTP_403_FORBIDDEN)
-        elif instance.is_completed:
+        
+        if 'order' in data: # Allow order to be updated even if the task is completed
+            instance.order = data['order']
+
+        if instance.is_completed:
             return Response({
                 "success": False,
                 "message": "Cannot update a completed task."
@@ -323,9 +333,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if 'title' in data:
             instance.title = data['title']
-
-        if 'order' in data:
-            instance.order = data['order']
         
         instance.save()
         serializer = self.get_serializer(instance)
