@@ -1,24 +1,21 @@
 <template>
-    <div class="container my-5">
-        <div class="w-full">
-            <div class="bg-slate-200 rounded-lg shadow-md p-6 w-full">
-                <div class="flex justify-between">
-                    <div class="flex items-center">
-                        <h1 class="text-lg font-bold">{{ title }}</h1>
-                        <button @click="editSelf" class="ml-2">
-                            <EditIcon />
-                        </button>
-                    </div>
-
-                    <button @click="deleteSelf" class="mx-2">
-                        <DeleteIcon />
-                    </button>
-                </div>
-                <TaskList :tasks="tasks" @delete-task="deleteTask" @edit-task="editTask"
-                    @toggle-complete="toggleComplete" />
-                <AddTaskForm @add-task="addTask" />
+    <div class="container my-5 bg-slate-200 rounded-lg shadow-md p-6 w-full" @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false">
+        <div class="flex justify-between">
+            <div class="flex items-center">
+                <h1 class="text-lg font-bold">{{ title }}</h1>
+                <button @click="editSelf" class="ml-4 relative">
+                    <EditIcon :isHovered="isHovered" />
+                </button>
             </div>
+
+            <button @click="deleteSelf" class="mx-2 relative">
+                <DeleteIcon :isHovered="isHovered" />
+            </button>
         </div>
+
+        <TaskList :tasks="tasks" @delete-task="deleteTask" @edit-task="editTask" @toggle-complete="toggleComplete" />
+        <AddTaskForm @add-task="addTask" />
     </div>
 </template>
 
@@ -41,6 +38,11 @@ export default {
         TaskList,
         EditIcon,
         DeleteIcon,
+    },
+    data() {
+        return {
+            isHovered: false,
+        }
     },
     methods: {
         addTask(task) {
@@ -98,6 +100,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 /* Add your styles here */
 </style>
