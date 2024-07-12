@@ -5,7 +5,7 @@
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
-        <draggable v-model="taskContainersCopy" @end="onDragEnd" :itemKey="container => container.id"
+        <draggable v-model="taskContainers" @change="onDragEnd" :itemKey="container => container.id"
           :options="dragOptions">
           <template #item="{ element }">
             <TaskContainer :key="element.id" :id="element.id" :title="element.title"
@@ -38,34 +38,49 @@ export default {
     return {
       project: '',
       taskContainers: [],
-      taskContainersCopy: []
+      // taskContainersCopy: []
     }
   },
-  watch: {
-    taskContainers: {
-      handler(newVal) {
-        this.taskContainersCopy = newVal.slice()
-      },
-      deep: true,
-      immediate: true
-    }
-  },
-  computed: {
-    dragOptions() {
-      return {
-        filter: '.completed',
-        disabled: this.taskIsCompleted
-      }
-    }
-  },
+  // watch: {
+  //   taskContainers: {
+  //     handler(newVal) {
+  //       this.taskContainersCopy = newVal.slice()
+  //     },
+  //     deep: true,
+  //     immediate: true
+  //   }
+  // },
   methods: {
+    sort() {
+      this.taskContainers.sort((a, b) => a.order - b.order)
+    },
     onDragEnd(event) {
-      console.log('Dragged task list:', this.taskContainersCopy)
+      const taskContainersToUpdate = this.taskContainers.map((container, index) => {
+        return {
+          id: container.id,
+          order: index
+        }
+      })
+      console.log(taskContainersToUpdate)
+      // use /api/taskcontainers/bulk_update/ endpoint
+      this.$http.put(`/api/taskcontainers/bulk_update/`, taskContainersToUpdate).then((response) => {
+        console.log(response)
+
+        for (let i = 0; i < this.taskContainers.length; i++) {
+          this.taskContainers[i].order = i
+        }
+
+        this.sort()
+        // this.taskContainers = response.data.data
+      }).catch(error => {
+        alert(error.response.data.message)
+      })
     },
     addTaskContainer(title) {
       this.$http.post(`/api/taskcontainers/`, {
         project: this.$route.params.projectId,
         title: title,
+        order: this.taskContainers.length
       }).then(response => {
         const taskContainer = response.data.data
 
@@ -173,6 +188,8 @@ export default {
       }))
 
       this.taskContainers = containersWithTasks
+
+      this.sort()
     } catch (error) {
       console.error('Error fetching data:', error)
     }
