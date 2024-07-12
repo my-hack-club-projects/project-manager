@@ -41,7 +41,6 @@ export default {
     },
     data() {
         return {
-            // tasks: this.tasks.sort((a, b) => a.order - b.order),
             isHovered: false
         };
     },
@@ -52,10 +51,7 @@ export default {
                 task_container: this.id,
                 order: this.tasks.length
             }).then(response => {
-                // this.tasks.push(response.data.data); // We need to insert the new task at the correct position based on the order property
                 this.tasks.splice(response.data.data.order, 0, response.data.data);
-                console.log(this.tasks);
-                // this.tasks = this.tasks.sort((a, b) => a.order - b.order)
             }).catch(error => {
                 alert(error.response.data.message);
             });
