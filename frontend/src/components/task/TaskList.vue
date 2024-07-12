@@ -23,32 +23,31 @@ export default {
     },
     data() {
         return {
-            tasksCopy: [...this.tasks] // Initialize tasksCopy with a copy of tasks
+            tasksCopy: [...this.tasks]
         };
     },
     watch: {
         tasks: {
             handler(newVal) {
-                this.tasksCopy = [...newVal]; // Update tasksCopy when tasks prop changes
+                console.log('Tasks updated:', newVal);
+                this.tasksCopy = [...newVal];
             },
-            immediate: true // Ensure tasksCopy is initialized immediately
+            deep: true,
+            immediate: true
         }
     },
     methods: {
         onDragEnd(event) {
-            console.log('Dragged task list:', this.tasksCopy);
+            this.$emit('update-tasks', this.tasksCopy);
         },
         deleteTask(index, taskId) {
-            // Implement deleteTask logic using index and taskId
-            this.$emit('delete-task', index, taskId); // Emit event to parent component if needed
+            this.$emit('delete-task', index, taskId);
         },
         editTask(index, taskId, newText) {
-            // Implement editTask logic using index, taskId, and newText
-            this.$emit('edit-task', index, taskId, newText); // Emit event to parent component if needed
+            this.$emit('edit-task', index, taskId, newText);
         },
         toggleComplete(index, taskId) {
-            // Implement toggleComplete logic using index and taskId
-            this.$emit('toggle-complete', index, taskId); // Emit event to parent component if needed
+            this.$emit('toggle-complete', index, taskId);
         }
     }
 };
