@@ -166,12 +166,6 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
         
         if 'order' in data: # Allow order to be updated even if the task container is completed
             instance.order = data['order']
-
-        if instance.is_completed:
-            return Response({
-                "success": False,
-                "message": "Cannot update a completed task container."
-            }, status=status.HTTP_403_FORBIDDEN)
         
         if 'title' in data:
             if instance.is_completed:
@@ -316,12 +310,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if 'order' in data: # Allow order to be updated even if the task is completed
             instance.order = data['order']
-
-        if instance.is_completed:
-            return Response({
-                "success": False,
-                "message": "Cannot update a completed task."
-            }, status=status.HTTP_403_FORBIDDEN)
         
         if 'is_completed' in data:
             instance.is_completed = True
@@ -332,6 +320,12 @@ class TaskViewSet(viewsets.ModelViewSet):
                 instance.task_container.save()
         
         if 'title' in data:
+            if instance.is_completed:
+                return Response({
+                    "success": False,
+                    "message": "Cannot update a completed task."
+                }, status=status.HTTP_403_FORBIDDEN)
+            
             instance.title = data['title']
         
         instance.save()
