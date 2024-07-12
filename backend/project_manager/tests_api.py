@@ -166,6 +166,27 @@ class ProjectManagerTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['data']['title'], 'Renamed Task Container')
 
+    def test_reorder_task_containers(self):
+        response = self.client.put(f'/api/taskcontainers/{self.task_container.id}/', {
+            'order': 2
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['data']['order'], 2)
+
+    def test_reorder_task_containers_in_bulk(self):
+        data = [
+            {
+                'id': self.task_container.id,
+                'order': 2
+            }
+        ]
+
+        response = self.client.put(f'/api/taskcontainers/bulk_update/', json.dumps(data), content_type='application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["data"][0]['order'], 2)
+
     # Test tasks
     def test_get_tasks(self):
         response = self.client.get('/api/tasks/')

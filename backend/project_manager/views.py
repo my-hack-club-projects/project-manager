@@ -156,6 +156,35 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
         if project_id is not None:
             queryset = queryset.filter(project_id=project_id)
         return queryset
+    
+    def update_instance(self, instance, data):
+        if instance.project.category.locked:
+            return Response({
+                "success": False,
+                "message": "Cannot update a task container in a locked project."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        if 'title' in data:
+            if instance.is_completed:
+                return Response({
+                    "success": False,
+                    "message": "Cannot update the title of a completed task container."
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            instance.title = data['title']
+
+        if 'order' in data:
+            instance.order = data['order']
+        
+        instance.save()
+        serializer = self.get_serializer(instance)
+        
+        return Response({
+            "success": True,
+            "message": "Task container updated successfully.",
+            "data": serializer.data
+        })
+    
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -187,28 +216,38 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.project.category.locked:
+        return self.update_instance(instance, request.data)
+    
+    @action(detail=False, methods=['put'], url_path='bulk_update')
+    def update_multiple(self, request, *args, **kwargs):
+        if not isinstance(request.data, list):
             return Response({
                 "success": False,
-                "message": "Cannot update a task container in a locked project."
-            }, status=status.HTTP_403_FORBIDDEN)
+                "message": "Data must be a list."
+            }, status=status.HTTP_400_BAD_REQUEST)
         
-        if 'title' in request.data:
-            if instance.is_completed:
+        data = request.data.copy()
+        return_data = []
+
+        for task_container_data in data:
+            try:
+                task_container_id = task_container_data['id']
+                task_container = TaskContainer.objects.get(pk=task_container_id)
+
+                response = self.update_instance(task_container, task_container_data)
+                if not response.data['success']:
+                    return {"success": False, "message": "Some task containers could not be updated."}
+                return_data.append(response.data['data'])
+            except TaskContainer.DoesNotExist:
                 return Response({
                     "success": False,
-                    "message": "Cannot update the title of a completed task container."
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            instance.title = request.data['title']
-        
-        instance.save()
-        serializer = self.get_serializer(instance)
+                    "message": "Task container does not exist."
+                }, status=status.HTTP_404_NOT_FOUND)
         
         return Response({
             "success": True,
-            "message": "Task container updated successfully.",
-            "data": serializer.data
+            "message": "Task containers updated successfully.",
+            "data": return_data
         })
     
     def destroy(self, request, *args, **kwargs):
