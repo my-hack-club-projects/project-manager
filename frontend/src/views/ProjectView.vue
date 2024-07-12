@@ -70,6 +70,45 @@ export default {
     }
   },
   async created() {
+    // For testing, add three task containers with varying amounts of tasks
+    if (this.$isDevelopment) {
+      this.taskContainers = [
+        {
+          id: 0,
+          title: 'Test milestone 1',
+          is_completed: false,
+          tasks: Array.from({ length: 3 }, (_, i) => ({
+            id: i,
+            title: `Test task ${i + 1}`,
+            is_completed: false,
+            task_container: 0
+          }))
+        },
+        {
+          id: 1,
+          title: 'Test milestone 2',
+          is_completed: false,
+          tasks: Array.from({ length: 2 }, (_, i) => ({
+            id: i,
+            title: `Test task ${i + 1}`,
+            is_completed: false,
+            task_container: 1
+          }))
+        },
+        {
+          id: 2,
+          title: 'Test milestone 3',
+          is_completed: false,
+          tasks: Array.from({ length: 1 }, (_, i) => ({
+            id: i,
+            title: `Test task ${i + 1}`,
+            is_completed: false,
+            task_container: 2
+          }))
+        }
+      ]
+    }
+
     const categoryId = this.$route.params.categoryId
     const projectId = this.$route.params.projectId
 
