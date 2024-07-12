@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Category, Project, TaskContainer, Task, Session, Note
@@ -247,6 +248,41 @@ class TaskViewSet(viewsets.ModelViewSet):
         if task_container_id is not None:
             queryset = queryset.filter(task_container_id=task_container_id)
         return queryset
+    
+    def update_instance(self, instance, data):
+        if instance.task_container.project.category.locked or instance.task_container.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot update a task in a locked or completed task container."
+            }, status=status.HTTP_403_FORBIDDEN)
+        elif instance.is_completed:
+            return Response({
+                "success": False,
+                "message": "Cannot update a completed task."
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        if 'is_completed' in data:
+            instance.is_completed = True
+
+            task_container_tasks = Task.objects.filter(task_container=instance.task_container)
+            if all([task.is_completed for task in task_container_tasks]):
+                instance.task_container.is_completed = True
+                instance.task_container.save()
+        
+        if 'title' in data:
+            instance.title = data['title']
+
+        if 'order' in data:
+            instance.order = data['order']
+        
+        instance.save()
+        serializer = self.get_serializer(instance)
+        
+        return Response({
+            "success": True,
+            "message": "Task updated successfully.",
+            "data": serializer.data
+        })
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -278,38 +314,39 @@ class TaskViewSet(viewsets.ModelViewSet):
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.task_container.project.category.locked or instance.task_container.is_completed:
+        return self.update_instance(instance, request.data)
+    
+    @action(detail=False, methods=['put'], url_path='bulk_update')
+    def update_multiple(self, request, *args, **kwargs):
+        if not isinstance(request.data, list):
             return Response({
                 "success": False,
-                "message": "Cannot update a task in a locked or completed task container."
-            }, status=status.HTTP_403_FORBIDDEN)
-        elif instance.is_completed:
-            return Response({
-                "success": False,
-                "message": "Cannot update a completed task."
-            }, status=status.HTTP_403_FORBIDDEN)
+                "message": "Data must be a list."
+            }, status=status.HTTP_400_BAD_REQUEST)
         
-        if 'is_completed' in request.data:
-            instance.is_completed = True
-            instance.save()
-            
-            task_container_tasks = Task.objects.filter(task_container=instance.task_container)
-            if all([task.is_completed for task in task_container_tasks]):
-                instance.task_container.is_completed = True
-                instance.task_container.save()
-        
-        elif 'title' in request.data:
-            instance.title = request.data['title']
-            instance.save()
-        
-        serializer = self.get_serializer(instance)
+        data = request.data.copy()
+        return_data = []
+
+        for task_data in data:
+            try:
+                task_id = task_data['id']
+                task = Task.objects.get(pk=task_id)
+            except Task.DoesNotExist:
+                return Response({
+                    "success": False,
+                    "message": "Task does not exist."
+                }, status=status.HTTP_404_NOT_FOUND)
+            response = self.update_instance(task, task_data)
+            if not response.data['success']:
+                return {"success": False, "message": "Some tasks could not be updated."}
+            return_data.append(response.data['data'])
         
         return Response({
             "success": True,
-            "message": "Task updated successfully.",
-            "data": serializer.data
+            "message": "Tasks updated successfully.",
+            "data": return_data
         })
-
+        
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.task_container.project.category.locked or instance.task_container.is_completed or instance.is_completed:

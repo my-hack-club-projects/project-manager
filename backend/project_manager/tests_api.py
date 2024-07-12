@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from .models import Category, Project, TaskContainer, Task, Session
-import time
+import time, json
 
 class ProjectManagerTests(APITestCase):
 
@@ -207,6 +207,36 @@ class ProjectManagerTests(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['data']['is_completed'], True)
+
+    def test_reorder_tasks_separately(self):
+        response = self.client.put(f'/api/tasks/{self.task1.id}/', {
+            'order': 2
+            })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['data']['order'], 2)
+
+        response = self.client.put(f'/api/tasks/{self.task1.id}/', {
+            'order': 1
+            })
+        
+    def test_reorder_tasks_in_bulk(self):
+        data = [
+            {
+                'id': self.task1.id,
+                'order': 2
+            },
+            {
+                'id': self.task2.id,
+                'order': 1
+            }
+        ]
+
+        response = self.client.put(f'/api/tasks/bulk_update/', json.dumps(data), content_type='application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()["data"][0]['order'], 2)
+        self.assertEqual(response.json()["data"][1]['order'], 1)
 
     # Test sessions
     def test_get_sessions(self):
