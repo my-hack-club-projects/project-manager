@@ -4,7 +4,7 @@
       <div class="flex justify-between items-center">
         <div class="flex items-center">
           <h1 class="text-2xl font-bold mr-4">Project Manager</h1>
-          <nav>
+          <nav class="hidden sm:block">
             <ul class="flex space-x-4">
               <li><router-link to="/projects">Projects</router-link></li>
               <li><router-link to="/projects/analytics">Analytics</router-link></li>
