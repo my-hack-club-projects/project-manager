@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=64)
     locked = models.BooleanField(default=False)
 
     def __str__(self):
@@ -25,7 +25,7 @@ class TaskContainer(models.Model):
         return self.title
 
 class Task(models.Model):
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=200)
     task_container = models.ForeignKey(TaskContainer, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
 
@@ -54,7 +54,7 @@ class Note(models.Model):
     # they serve the purpose of having a place to write down your thoughts or communicate with collaborators (if any)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE) # the user who sent the note
-    content = models.TextField(max_length=128)
+    content = models.TextField(max_length=300)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
