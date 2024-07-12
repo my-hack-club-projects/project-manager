@@ -203,6 +203,9 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
                 "success": False,
                 "message": "Cannot create a task container in a locked project."
             }, status=status.HTTP_403_FORBIDDEN)
+        
+        if not 'order' in data:
+            data['order'] = TaskContainer.objects.filter(project=project).count()
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -354,6 +357,9 @@ class TaskViewSet(viewsets.ModelViewSet):
                 "success": False,
                 "message": "Cannot create a task in a locked or completed task container."
             }, status=status.HTTP_403_FORBIDDEN)
+        
+        if not 'order' in data:
+            data['order'] = Task.objects.filter(task_container=task_container).count()
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
