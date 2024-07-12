@@ -316,6 +316,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         
         if 'is_completed' in data:
             instance.is_completed = True
+            instance.save()
 
             task_container_tasks = Task.objects.filter(task_container=instance.task_container)
             if all([task.is_completed for task in task_container_tasks]):
