@@ -57,27 +57,42 @@ export default {
         },
         deleteTask(taskIndex, taskId) {
             this.$http.delete(`/api/tasks/${taskId}/`).then(() => {
-                this.tasks.splice(taskIndex, 1);
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (this.tasks[i].id === taskId) {
+                        this.tasks.splice(i, 1);
+                        break;
+                    }
+                }
             }).catch(error => {
                 alert(error.response.data.message);
             });
         },
         editTask(taskIndex, taskId, newText) {
             this.$http.put(`/api/tasks/${taskId}/`, {
-                id: this.tasks[taskIndex].id,
+                id: taskId,
                 title: newText,
             }).then(response => {
-                this.tasks.splice(taskIndex, 1, response.data.data);
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (this.tasks[i].id === taskId) {
+                        this.tasks[i].title = newText;
+                        break;
+                    }
+                }
             }).catch(error => {
                 alert(error.response.data.message);
             });
         },
         toggleComplete(taskIndex, taskId) {
             this.$http.put(`/api/tasks/${taskId}/`, {
-                id: this.tasks[taskIndex].id,
+                id: taskId,
                 is_completed: true,
             }).then(response => {
-                this.tasks.splice(taskIndex, 1, response.data.data);
+                for (let i = 0; i < this.tasks.length; i++) {
+                    if (this.tasks[i].id === taskId) {
+                        this.tasks[i].is_completed = true;
+                        break;
+                    }
+                }
             }).catch(error => {
                 alert(error.response.data.message);
             });
