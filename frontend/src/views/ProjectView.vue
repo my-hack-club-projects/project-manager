@@ -44,6 +44,9 @@ export default {
         taskContainer.tasks = []
 
         this.taskContainers.push(taskContainer)
+
+        // Scroll to the bottom of the page
+        document.getElementById('bottom-spacer').scrollIntoView({ behavior: 'smooth' })
       }).catch(error => {
         alert(error.response.data.message)
       })
