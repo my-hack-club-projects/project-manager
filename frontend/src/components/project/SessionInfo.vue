@@ -1,7 +1,17 @@
     <template>
-        <div @click="onSessionInfoClicked"
+        <div @click="editProject"
             class="container grid grid-cols-1 md:grid-cols-2 items-center justify-center mx-auto p-4 gap-4 bg-slate-200 rounded-lg shadow-md hover:cursor-pointer">
-            <h2 class="text-3xl truncate font-bold mb-4 mt-2 w-full">{{ project.name }}</h2>
+            <div class="flex items-center">
+                <h2 class="text-3xl truncate font-bold mb-4 mt-2 w-full">{{ project.name }}</h2>
+
+                <button @click.stop="deleteProject" class="ml-2">
+                    <svg class="opacity-40" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z" />
+                    </svg>
+                </button>
+            </div>
 
             <div class="flex flex-col items-center p-2 bg-slate-100 rounded-md shadow-sm text-nowrap w-full">
                 <div class="flex items-center justify-start w-full">
@@ -32,7 +42,6 @@
     </template>
 
 <script>
-import EditIcon from '../icons/EditIcon.vue';
 
 export default {
     props: {
