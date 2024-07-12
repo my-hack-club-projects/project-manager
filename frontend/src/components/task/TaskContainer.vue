@@ -41,8 +41,7 @@ export default {
     },
     data() {
         return {
-            // sort this.tasks based on the order property of each task
-            tasks: this.tasks.sort((a, b) => a.order - b.order),
+            // tasks: this.tasks.sort((a, b) => a.order - b.order),
             isHovered: false
         };
     },
@@ -51,8 +50,12 @@ export default {
             this.$http.post(`/api/tasks/`, {
                 title: task,
                 task_container: this.id,
+                order: this.tasks.length
             }).then(response => {
-                this.tasks.push(response.data.data);
+                // this.tasks.push(response.data.data); // We need to insert the new task at the correct position based on the order property
+                this.tasks.splice(response.data.data.order, 0, response.data.data);
+                console.log(this.tasks);
+                // this.tasks = this.tasks.sort((a, b) => a.order - b.order)
             }).catch(error => {
                 alert(error.response.data.message);
             });
@@ -100,16 +103,18 @@ export default {
             });
         },
         sortTasks(newTasks) {
-            // Use the /api/tasks/bulk_update/ endpoint to update all tasks in this container with their new order
-            this.$http.put(`/api/tasks/bulk_update/`, newTasks.map((task, index) => ({
-                id: task.id,
-                order: index
-            }))
-            ).then(() => {
-                // Sort the tasks in this container based on the new order
-                this.tasks = newTasks;
+            const tasksToUpdate = []
+
+            for (let i = 0; i < newTasks.length; i++) {
+                tasksToUpdate.push({
+                    id: newTasks[i].id,
+                    order: i
+                });
+            }
+
+            this.$http.put(`/api/tasks/bulk_update/`, tasksToUpdate).then(response => {
+                // this.tasks = response.data.data
             }).catch(error => {
-                console.log(error)
                 alert(error.response.data.message);
             });
         },

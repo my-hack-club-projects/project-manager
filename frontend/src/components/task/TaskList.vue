@@ -1,5 +1,5 @@
 <template>
-    <draggable v-model="tasksCopy" @end="onDragEnd" :itemKey="task => task.id" :disabled="disableDrag">
+    <draggable v-model="tasksCopy" @change="onDragEnd" :itemKey="task => task.id" :disabled="disableDrag">
         <template #item="{ element, index }">
             <Task :key="element.id" :id="element.id" :task="element.title" :completed="element.is_completed"
                 @delete-task="deleteTask(index, element.id)" @edit-task="editTask(index, element.id, $event)"
@@ -22,6 +22,7 @@ export default {
         disableDrag: Boolean
     },
     data() {
+        this.sort(this.tasks);
         return {
             tasksCopy: [...this.tasks]
         };
@@ -36,7 +37,24 @@ export default {
         }
     },
     methods: {
+        sort(tasks) {
+            tasks.sort((a, b) => a.order - b.order);
+        },
+        setOrder(tasks) {
+            tasks.forEach((task, index) => {
+                task.order = index;
+            });
+        },
         onDragEnd(event) {
+            this.setOrder(this.tasksCopy);
+
+            // copy the Order from each task to the original tasks array
+            this.tasksCopy.forEach((task, index) => {
+                this.tasks.find(t => t.id === task.id).order = index;
+            });
+
+            this.sort(this.tasks);
+
             this.$emit('sort-tasks', this.tasksCopy);
         },
         deleteTask(index, taskId) {
