@@ -225,6 +225,16 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
                 "success": False,
                 "message": "Data must be a list."
             }, status=status.HTTP_400_BAD_REQUEST)
+        elif not all(isinstance(task_container_data, dict) for task_container_data in request.data):
+            return Response({
+                "success": False,
+                "message": "Data must be a list of dictionaries."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        elif not all(['id' in task_container_data for task_container_data in request.data]):
+            return Response({
+                "success": False,
+                "message": "All task containers must have an id."
+            }, status=status.HTTP_400_BAD_REQUEST)
         
         data = request.data.copy()
         return_data = []
@@ -361,6 +371,16 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Data must be a list."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        elif not all(isinstance(task_data, dict) for task_data in request.data):
+            return Response({
+                "success": False,
+                "message": "Data must be a list of dictionaries."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        elif not all(['id' in task_data for task_data in request.data]):
+            return Response({
+                "success": False,
+                "message": "All tasks must have an id."
             }, status=status.HTTP_400_BAD_REQUEST)
         
         data = request.data.copy()
