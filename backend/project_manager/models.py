@@ -5,6 +5,8 @@ class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     locked = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+    is_default = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -12,6 +14,7 @@ class Category(models.Model):
 class Project(models.Model):
     name = models.CharField(max_length=64)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -20,6 +23,7 @@ class TaskContainer(models.Model):
     title = models.CharField(max_length=64)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -28,6 +32,7 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     task_container = models.ForeignKey(TaskContainer, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
