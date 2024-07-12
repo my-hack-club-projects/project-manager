@@ -91,11 +91,11 @@ export default {
         },
         {
           id: 1,
-          title: 'Test milestone 2',
+          title: 'Test milestone 2 with a really really looong name lol',
           is_completed: false,
           tasks: Array.from({ length: 2 }, (_, i) => ({
             id: i,
-            title: `Test task ${i + 1}`,
+            title: `Test looooooooooooooooong task ${i + 1}`,
             is_completed: false,
             task_container: 1
           }))

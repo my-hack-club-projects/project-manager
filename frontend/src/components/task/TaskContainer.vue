@@ -15,7 +15,7 @@
                         </button>
                     </div>
 
-                    <button @click="deleteSelf" class="mr-2">
+                    <button @click="deleteSelf" class="mx-2">
                         <svg class="feather feather-edit" height="16" width="16" fill="#000000" version="1.1"
                             xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 490 490" xml:space="preserve">
