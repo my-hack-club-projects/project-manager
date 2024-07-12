@@ -131,6 +131,7 @@ STATIC_URL = 'assets/'
 
 STATICFILES_DIRS = [
     BASE_DIR / '../frontend/dist/assets',  # Path to Vue.js static files
+    BASE_DIR / '../frontend/public',
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
