@@ -13,5 +13,6 @@ app.use(createPinia())
 app.use(router)
 
 app.config.globalProperties.$http = axiosInstance
+app.config.globalProperties.$isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.mount('#app')

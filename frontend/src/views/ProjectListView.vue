@@ -58,7 +58,7 @@ export default {
   },
   async created() {
     // For testing, add a new category with 5 projects.
-    if (process.env.NODE_ENV !== 'production') {
+    if (this.$isDevelopment) {
       this.categories.push({
         id: 0,
         name: 'Test category',
