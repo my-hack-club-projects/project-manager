@@ -11,6 +11,7 @@
       </div>
 
       <AddTaskForm :placeholder="'New milestone'" @add-task="addTaskContainer" />
+      <div id="bottom-spacer" class="h-64"></div>
     </div>
   </div>
 </template>
