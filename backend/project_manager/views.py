@@ -246,7 +246,10 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
 
                 response = self.update_instance(task_container, task_container_data)
                 if not response.data['success']:
-                    return {"success": False, "message": "Some task containers could not be updated."}
+                    return Response({
+                        "success": False,
+                        "message": response.data['message']
+                    })
                 return_data.append(response.data['data'])
             except TaskContainer.DoesNotExist:
                 return Response({
@@ -397,7 +400,10 @@ class TaskViewSet(viewsets.ModelViewSet):
                 }, status=status.HTTP_404_NOT_FOUND)
             response = self.update_instance(task, task_data)
             if not response.data['success']:
-                return {"success": False, "message": "Some tasks could not be updated."}
+                return Response({
+                    "success": False,
+                    "message": response.data['message']
+                })
             return_data.append(response.data['data'])
         
         return Response({
