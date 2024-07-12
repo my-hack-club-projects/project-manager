@@ -72,6 +72,11 @@ export default {
   async created() {
     // For testing, add three task containers with varying amounts of tasks
     if (this.$isDevelopment) {
+      this.project = {
+        id: 1,
+        name: 'Project name very loooooooooooong',
+      }
+
       this.taskContainers = [
         {
           id: 0,
@@ -107,6 +112,8 @@ export default {
           }))
         }
       ]
+
+      return
     }
 
     const categoryId = this.$route.params.categoryId
