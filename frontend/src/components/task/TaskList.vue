@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         onDragEnd(event) {
-            this.$emit('update-tasks', this.tasksCopy);
+            this.$emit('sort-tasks', this.tasksCopy);
         },
         deleteTask(index, taskId) {
             this.$emit('delete-task', index, taskId);

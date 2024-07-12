@@ -15,7 +15,7 @@
         </div>
 
         <TaskList :tasks="tasks" :disable-drag="is_completed" @delete-task="deleteTask" @edit-task="editTask"
-            @toggle-complete="toggleComplete" />
+            @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
         <AddTaskForm @add-task="addTask" />
     </div>
 </template>
@@ -41,6 +41,8 @@ export default {
     },
     data() {
         return {
+            // sort this.tasks based on the order property of each task
+            tasks: this.tasks.sort((a, b) => a.order - b.order),
             isHovered: false
         };
     },
@@ -97,6 +99,21 @@ export default {
                 alert(error.response.data.message);
             });
         },
+        sortTasks(newTasks) {
+            // Use the /api/tasks/bulk_update/ endpoint to update all tasks in this container with their new order
+            this.$http.put(`/api/tasks/bulk_update/`, newTasks.map((task, index) => ({
+                id: task.id,
+                order: index
+            }))
+            ).then(() => {
+                // Sort the tasks in this container based on the new order
+                this.tasks = newTasks;
+            }).catch(error => {
+                console.log(error)
+                alert(error.response.data.message);
+            });
+        },
+
         deleteSelf() {
             this.$emit('delete', this.id);
         },
