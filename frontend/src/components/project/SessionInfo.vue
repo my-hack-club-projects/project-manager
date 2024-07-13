@@ -105,8 +105,8 @@ export default {
             }, this.projectEditDebounceDuration);
         },
 
-        deleteProject(event) {
-            if (!confirm('Are you sure you want to delete this project?')) {
+        async deleteProject(event) {
+            if (!await this.$confirm('Are you sure you want to delete this project?', false)) {
                 return;
             }
 
