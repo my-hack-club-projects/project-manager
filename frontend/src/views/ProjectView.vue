@@ -77,11 +77,8 @@ export default {
 
         // Focus on the new task container's add task input
         this.$nextTick(() => {
-          console.log(taskContainer)
           const taskContainerElement = document.getElementById(`task-container-${taskContainer.id}`)
-          console.log(taskContainerElement)
           const addTaskInput = taskContainerElement.querySelector('.add-task-input')
-          console.log(addTaskInput)
 
           addTaskInput.focus()
         })
