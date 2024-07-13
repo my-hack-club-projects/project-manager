@@ -77,6 +77,10 @@ export default {
       });
     },
     deleteTaskContainer(taskContainerId) {
+      if (!this.$confirm('Are you sure you want to delete this milestone?', false)) {
+        return
+      }
+
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
 
       this.$http.delete(`/api/taskcontainers/${taskContainerId}/`).then(() => {
