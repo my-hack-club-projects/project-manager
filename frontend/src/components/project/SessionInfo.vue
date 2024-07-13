@@ -105,6 +105,21 @@ export default {
 
             event.stopPropagation();
         },
+
+        async archiveProject(event) {
+            if (!await this.$confirm('Are you sure you want to archive this project?', false)) {
+                return;
+            }
+
+            this.$http.post('/api/projects/archive/', {
+                id: this.project.id,
+                archive: true,
+            }).then(() => {
+                this.$router.push('/projects/');
+            });
+
+            event.stopPropagation();
+        },
     },
 }
 </script>

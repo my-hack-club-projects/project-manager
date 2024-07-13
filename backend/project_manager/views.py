@@ -133,6 +133,30 @@ class ProjectViewSet(viewsets.ModelViewSet):
             "message": "Project deleted successfully."
         })
     
+    @action(detail=False, methods=['post'], url_path='archive')
+    def archive(self, request, *args, **kwargs):
+        project_id = request.data.get('id')
+        archive = request.data.get('archive', True)
+
+        try:
+            project = Project.objects.get(pk=project_id, category__user=request.user)
+            # category = archive and Category.objects.get(pk=request.user.archive_category) or Category.objects.get(pk=request.user.default_category) # Uncomment after extending the user model
+            # for now, use 1 and 2
+            category = archive and Category.objects.get(pk=2) or Category.objects.get(pk=1)
+
+            project.category = category
+            project.save()
+
+            return Response({
+                "success": True,
+                "message": "Project archived successfully."
+            })
+        except Project.DoesNotExist:
+            return Response({
+                "success": False,
+                "message": "Project does not exist."
+            }, status=status.HTTP_404_NOT_FOUND)
+    
 class TaskContainerViewSet(viewsets.ModelViewSet):
     """
     GET /taskcontainers/
