@@ -79,8 +79,7 @@ export default {
         },
 
         onProjectDataChanged(title, description) {
-            console.log('Project data changed');
-            console.log(title, description);
+            if (!title || !description) return
 
             this.projectLastEdit = new Date();
 
@@ -91,10 +90,8 @@ export default {
                         name: title,
                         description: description,
                     }).then(response => {
-                        // this.project.name = response.data.data.name;
-                        // this.project.description = response.data.data.description;
-
-                        // this.project = response.data.data;
+                        this.project.name = title
+                        this.project.description = description
                     }).catch(error => {
                         alert(error)
                         alert(error.response.data.message);
@@ -102,24 +99,6 @@ export default {
                 }
             }, this.projectEditDebounceDuration);
         },
-
-        // editProject(event) {
-        //     const projectName = prompt('Enter new project name', this.project.name);
-
-        //     if (!projectName) {
-        //         return;
-        //     }
-
-        //     this.$http.put(`/api/projects/${this.project.id}/`, {
-        //         name: projectName,
-        //     }).then(response => {
-        //         this.project.name = response.data.data.name;
-        //     }).catch(error => {
-        //         alert(error.response.data.message);
-        //     });
-
-        //     event.stopPropagation();
-        // },
 
         deleteProject(event) {
             if (!confirm('Are you sure you want to delete this project?')) {
