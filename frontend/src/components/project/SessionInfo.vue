@@ -43,12 +43,17 @@
         <PopupWindow v-if="projectPopup" @close="projectPopup = false" :title="project.name"
             :description="project.description" :titleEditable="true" :descriptionEditable="true"
             @change="onProjectDataChanged">
-            <!-- Display additional elements here -->
+            <div class="flex mt-2">
+                <TextButton color="red" @click="deleteProject" class="mr-2">Delete project</TextButton>
+                <TextButton color="orange" @click="archiveProject" class="mr-2">Archive project</TextButton>
+            </div>
         </PopupWindow>
     </template>
 
 <script>
 import PopupWindow from './PopupWindow.vue';
+import TextButton from '../global/TextButton.vue'
+import { Text } from 'vue';
 
 export default {
     props: {
@@ -56,6 +61,7 @@ export default {
     },
     components: {
         PopupWindow,
+        TextButton,
     },
     data() {
         return {
