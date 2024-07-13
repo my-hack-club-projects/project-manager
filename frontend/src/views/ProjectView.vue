@@ -41,15 +41,6 @@ export default {
       // taskContainersCopy: []
     }
   },
-  // watch: {
-  //   taskContainers: {
-  //     handler(newVal) {
-  //       this.taskContainersCopy = newVal.slice()
-  //     },
-  //     deep: true,
-  //     immediate: true
-  //   }
-  // },
   methods: {
     sort() {
       this.taskContainers.sort((a, b) => a.order - b.order)

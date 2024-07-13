@@ -1,4 +1,3 @@
-// src/shims-vue.d.ts
 import { ComponentCustomProperties } from 'vue'
 import { Store } from 'vuex'
 
