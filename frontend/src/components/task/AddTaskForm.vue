@@ -2,7 +2,8 @@
     <form @submit.prevent="onSubmit">
         <div class="flex mt-4">
             <input ref="input" v-model="newTask" type="text"
-                class="add-task-input w-full px-4 py-2 mr-2 rounded border-gray-300 focus:outline-none focus:border-blue-500"
+                class="add-task-input w-full px-4 py-2 mr-2 rounded focus:outline-none border"
+                :class="{ 'text-red-500 border-red-500': newTask.length >= maxLength }"
                 :placeholder="disabled ? 'This project is archived' : placeholder" required :disabled="disabled"
                 :maxlength="maxLength" />
             <TextButton v-if="!disabled" color="blue">

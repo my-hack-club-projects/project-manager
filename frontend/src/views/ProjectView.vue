@@ -40,7 +40,7 @@ export default {
       project: '',
       locked: true, // locked by default, will be updated in the created hook
       taskContainers: [],
-      constraints: {},
+      constraints: { "category": { "name": 64 }, "project": { "name": 64, "description": 2000 }, "taskcontainer": { "title": 64 }, "task": { "title": 200 }, "session": { "goal": 100 }, "note": { "content": 300 } }, // Placeholder. these are fetched from the backend
     }
   },
   methods: {

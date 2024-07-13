@@ -6,8 +6,10 @@
                 <button @click="close(false)" class="text-2xl">&times;</button>
             </div>
             <div>
-                <input type="text" class="w-full p-2 border border-gray-300 rounded mb-4" v-model="inputValue"
-                    @keyup.enter="confirm" ref="inputField" :maxlength="maxLength" />
+                <input v-model="inputValue" type="text"
+                    class="w-full p-2 border rounded mb-4 focus:ring-0 focus:outline-none"
+                    :class="{ 'text-red-500 border-red-500': inputValue.length >= maxLength }" @keyup.enter="confirm"
+                    ref="inputField" :maxlength="maxLength" />
                 <div class="flex justify-end">
                     <TextButton @click="confirm" color="blue">Confirm</TextButton>
                 </div>
