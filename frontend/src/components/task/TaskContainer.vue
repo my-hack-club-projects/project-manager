@@ -1,6 +1,6 @@
 <template>
-    <div class="container my-5 bg-slate-200 rounded-lg shadow-md p-6 w-full" @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false">
+    <div :id="`task-container-${id}`" class="container my-5 bg-slate-200 rounded-lg shadow-md p-6 w-full"
+        @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="flex justify-between">
             <div class="flex items-center">
                 <h1 class="text-lg font-bold">{{ title }}</h1>
@@ -16,7 +16,7 @@
 
         <TaskList :tasks="tasks" :disable-drag="is_completed" @delete-task="deleteTask" @edit-task="editTask"
             @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
-        <AddTaskForm @add-task="addTask" />
+        <AddTaskForm ref="addTaskForm" @add-task="addTask" />
     </div>
 </template>
 
@@ -52,6 +52,11 @@ export default {
                 order: this.tasks.length
             }).then(response => {
                 this.tasks.splice(response.data.data.order, 0, response.data.data);
+
+                // Re-focusing the input field
+                this.$nextTick(() => {
+                    this.$refs.addTaskForm.$refs.input.focus();
+                });
             });
         },
         deleteTask(taskIndex, taskId) {

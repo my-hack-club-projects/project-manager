@@ -74,10 +74,21 @@ export default {
 
         // Scroll to the bottom of the page
         document.getElementById('bottom-spacer').scrollIntoView({ behavior: 'smooth' })
+
+        // Focus on the new task container's add task input
+        this.$nextTick(() => {
+          console.log(taskContainer)
+          const taskContainerElement = document.getElementById(`task-container-${taskContainer.id}`)
+          console.log(taskContainerElement)
+          const addTaskInput = taskContainerElement.querySelector('.add-task-input')
+          console.log(addTaskInput)
+
+          addTaskInput.focus()
+        })
       });
     },
-    deleteTaskContainer(taskContainerId) {
-      if (!this.$confirm('Are you sure you want to delete this milestone?', false)) {
+    async deleteTaskContainer(taskContainerId) {
+      if (!await this.$confirm('Are you sure you want to delete this milestone?', false)) {
         return
       }
 
