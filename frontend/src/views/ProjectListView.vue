@@ -1,5 +1,6 @@
 <script setup>
 import ProjectCard from '@/components/project/ProjectCard.vue'
+import TextButton from '@/components/global/TextButton.vue';
 </script>
 
 <template>
@@ -7,10 +8,9 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
     <div class="container mx-auto p-4">
       <div class="flex items-center">
         <h2 class="text-2xl font-bold mb-4 mt-2">Your projects</h2>
-        <button @click="createProject"
-          class="bg-gradient-to-br from-cyan-300 to-blue-600 text-white font-bold py-2 px-4 rounded-lg ml-auto">
+        <TextButton color="blue" class="ml-auto" @click="createProject">
           Create project
-        </button>
+        </TextButton>
       </div>
       <div class="flex flex-col">
         <div v-for="(category, index) in categories" :key="index" class="py-4">
@@ -34,7 +34,8 @@ import ProjectCard from '@/components/project/ProjectCard.vue'
 <script>
 export default {
   components: {
-    ProjectCard
+    ProjectCard,
+    TextButton,
   },
   data() {
     return {
