@@ -15,7 +15,7 @@
         </draggable>
       </div>
 
-      <AddTaskForm :locked="locked" :placeholder="'New milestone'" @add-task="addTaskContainer" />
+      <AddTaskForm :disabled="locked" :placeholder="'New milestone'" @add-task="addTaskContainer" />
       <div id="bottom-spacer" class="h-64"></div>
     </div>
   </div>

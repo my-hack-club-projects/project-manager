@@ -3,8 +3,8 @@
         <div class="flex mt-4">
             <input ref="input" v-model="newTask" type="text"
                 class="add-task-input w-full px-4 py-2 mr-2 rounded border-gray-300 focus:outline-none focus:border-blue-500"
-                :placeholder="placeholder" required />
-            <TextButton color="blue">
+                :placeholder="disabled ? 'This project is archived' : placeholder" required :disabled="disabled" />
+            <TextButton v-if="!disabled" color="blue">
                 Add
             </TextButton>
         </div>
@@ -19,6 +19,10 @@ export default {
         placeholder: {
             type: String,
             default: 'Add new task'
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     components: {

@@ -3,7 +3,8 @@
         <template #item="{ element, index }">
             <Task :key="element.id" :id="element.id" :task="element.title" :completed="element.is_completed"
                 @delete-task="deleteTask(index, element.id)" @edit-task="editTask(index, element.id, $event)"
-                @toggle-complete="toggleComplete(index, element.id)" :draggable="!element.is_completed" />
+                @toggle-complete="toggleComplete(index, element.id)" :draggable="!element.is_completed && !locked"
+                :disabled="locked" />
         </template>
     </draggable>
 </template>
@@ -19,7 +20,8 @@ export default {
     },
     props: {
         tasks: Array,
-        disableDrag: Boolean
+        disableDrag: Boolean,
+        locked: Boolean
     },
     data() {
         this.sort(this.tasks);

@@ -1,6 +1,6 @@
 <template>
     <div :id="`task-container-${id}`" class="container my-5 rounded-lg p-6 w-full"
-        :class="{ 'bg-gray-200': is_completed, 'bg-slate-200': !is_completed && !locked, 'shadow-md': !is_completed && !locked }"
+        :class="{ 'bg-gray-200': is_completed || locked, 'bg-slate-200': !is_completed && !locked, 'shadow-md': !is_completed && !locked }"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="flex justify-between">
             <div class="flex items-center">
@@ -15,8 +15,8 @@
             </button>
         </div>
 
-        <TaskList :tasks="tasks" :disable-drag="is_completed" @delete-task="deleteTask" @edit-task="editTask"
-            @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
+        <TaskList :tasks="tasks" :disableDrag="is_completed || locked" :locked="locked" @delete-task="deleteTask"
+            @edit-task="editTask" @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
 
         <div v-if="!is_completed && !locked">
             <AddTaskForm ref="addTaskForm" @add-task="addTask" />

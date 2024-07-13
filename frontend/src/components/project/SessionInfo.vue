@@ -37,7 +37,12 @@
             @change="onProjectDataChanged">
             <div class="flex mt-2">
                 <TextButton color="red" @click="deleteProject" class="mr-2">Delete project</TextButton>
-                <TextButton color="orange" @click="archiveProject" class="mr-2">Archive project</TextButton>
+                <TextButton v-if="this.archived" :color="'green'" @click="archiveProject" class="mr-2">
+                    Unarchive project
+                </TextButton>
+                <TextButton v-else :color="'orange'" @click="archiveProject" class="mr-2">
+                    Archive project
+                </TextButton>
             </div>
         </PopupWindow>
     </template>
@@ -49,6 +54,7 @@ import TextButton from '../global/TextButton.vue'
 export default {
     props: {
         project: Object,
+        archived: Boolean,
     },
     components: {
         PopupWindow,
@@ -59,7 +65,6 @@ export default {
             projectPopup: false,
             projectLastEdit: new Date(),
             projectEditDebounceDuration: 1000,
-            archived: false,
         }
     },
     methods: {
@@ -109,7 +114,7 @@ export default {
 
         async archiveProject(event) {
             const message = `Are you sure you want to ${this.archived ? 'unarchive' : 'archive'} this project?`;
-            if (!await this.$confirm(message, false)) {
+            if (!await this.$confirm(message, this.archived)) {
                 return;
             }
 
@@ -119,7 +124,8 @@ export default {
             }).then(() => {
                 // this.$router.push('/projects/');
                 this.$http.get(`/api/projects/${this.project.id}/`).then(response => {
-                    this.$router.push(`/projects/${response.data.data.category.id}/${response.data.data.id}/`);
+                    this.projectPopup = false;
+                    this.$router.push(`/projects/${response.data.data.category}/${response.data.data.id}/view/`);
                 });
             });
 
