@@ -122,7 +122,6 @@ export default {
                 id: this.project.id,
                 archive: !this.archived,
             }).then(() => {
-                // this.$router.push('/projects/');
                 this.$http.get(`/api/projects/${this.project.id}/`).then(response => {
                     this.projectPopup = false;
                     this.$router.push(`/projects/${response.data.data.category}/${response.data.data.id}/view/`);
