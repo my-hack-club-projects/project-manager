@@ -24,6 +24,22 @@ function displayAlert(title, message) {
   }
 }
 
+function getErrorTitle(error) {
+  if (error.response) {
+    if (error.response.status === 401) {
+      return "You don't have permission to view this resource!";
+    } else if (error.response.status === 403) {
+      return "You aren't allowed to do that!";
+    } else if (error.response.status === 404) {
+      return 'Not Found';
+    }
+  } else if (error.request) {
+    return 'Network Error';
+  } else {
+    return 'Error';
+  }
+}
+
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   response => {
@@ -42,13 +58,13 @@ axiosInstance.interceptors.response.use(
     // Handle errors globally if needed
     const foundAPIError = error.response?.data?.data?.message;
     const errorMessage = foundAPIError || error.message;
-    const title = foundAPIError ? "Can't do that!" : 'Unknown client error';
+    const title = foundAPIError ? "Can't do that!" : getErrorTitle(error);
 
     console.error('An error occurred:', errorMessage);
     
     displayAlert(title, errorMessage);
 
-    return Promise.reject(errorMessage);
+    return Promise.reject(error);
   }
 );
 

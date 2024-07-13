@@ -152,27 +152,32 @@ export default {
     const categoryId = this.$route.params.categoryId
     const projectId = this.$route.params.projectId
 
-    try {
-      const { data: project } = await this.$http.get(`/api/projects/${projectId}`)
-
+    this.$http.get(`/api/projects/${projectId}`).then(project => {
       this.project = project.data
 
-      const { data: containers } = await this.$http.get(`/api/taskcontainers/?project=${projectId}`)
-      const containersData = containers.data
+      this.$http.get(`/api/taskcontainers/?project=${projectId}`).then(containers => {
+        const containersData = containers.data.data
 
-      const containersWithTasks = await Promise.all(containersData.map(async container => {
-        let { data: tasks } = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
-        tasks = tasks.data
+        const containersWithTasks = containersData.map(async container => {
+          let tasks = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
+          tasks = tasks.data.data
 
-        return { ...container, tasks }
-      }))
+          return { ...container, tasks }
+        })
 
-      this.taskContainers = containersWithTasks
+        Promise.all(containersWithTasks).then(containersWithTasks => {
+          this.taskContainers = containersWithTasks
 
-      this.sort()
-    } catch (error) {
-      this.$alert("Unknown client error", error);
-    }
+          this.sort()
+        })
+      })
+    }).catch(error => {
+      if (error.response.status === 404 || error.response.status === 403) {
+        this.$router.push('/projects/')
+      } else {
+        this.$alert('An error occurred while fetching the project data. Please try again later.', error)
+      }
+    })
   }
 }
 </script>
