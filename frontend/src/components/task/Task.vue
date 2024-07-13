@@ -26,7 +26,8 @@ export default {
         id: Number,
         task: String,
         completed: Boolean,
-        disabled: Boolean
+        disabled: Boolean,
+        constraints: Object
     },
     components: {
         EditIcon,
@@ -43,7 +44,7 @@ export default {
             this.$emit('toggle-complete');
         },
         async editTask() {
-            const newText = await this.$prompt('Enter new name', this.task);
+            const newText = await this.$prompt('Enter new name', this.task, this.constraints.task.title);
             if (newText !== null) {
                 this.$emit('edit-task', newText.trim());
             }

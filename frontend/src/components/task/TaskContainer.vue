@@ -16,7 +16,8 @@
         </div>
 
         <TaskList :tasks="tasks" :disableDrag="is_completed || locked" :locked="locked" @delete-task="deleteTask"
-            @edit-task="editTask" @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
+            @edit-task="editTask" @toggle-complete="toggleComplete" @sort-tasks="sortTasks"
+            :constraints="constraints" />
 
         <div v-if="!is_completed && !locked">
             <AddTaskForm ref="addTaskForm" @add-task="addTask" :maxLength="constraints.task.title" />
@@ -123,7 +124,7 @@ export default {
             this.$emit('delete', this.id);
         },
         async editSelf() {
-            const newTitle = await this.$prompt('Enter new name', this.title);
+            const newTitle = await this.$prompt('Enter new name', this.title, this.constraints.taskcontainer.title);
             if (newTitle !== null) {
                 this.$emit('edit', this.id, newTitle.trim());
             }
