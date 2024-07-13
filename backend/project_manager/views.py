@@ -173,7 +173,10 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         
-        return Response(serializer.data)
+        return Response({
+            "success": True,
+            "data": serializer.data
+        })
     
 
     def create(self, request, *args, **kwargs):
@@ -317,7 +320,10 @@ class TaskViewSet(viewsets.ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         
-        return Response(serializer.data)
+        return Response({
+            "success": True,
+            "data": serializer.data
+        })
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -381,6 +387,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     "message": "Task does not exist."
                 }, status=status.HTTP_404_NOT_FOUND)
             response = self.update_instance(task, task_data)
+            print(response.data)
             if not response.data['success']:
                 return Response({
                     "success": False,

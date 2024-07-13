@@ -89,7 +89,7 @@ export default {
       this.$http.put(`/api/taskcontainers/${taskContainerId}/`, {
         title: newTitle,
       }).then(response => {
-        const newTitleFromResponse = response.data.data.title
+        const newTitleFromResponse = response.data.data.data.title
         this.taskContainers[taskContainerIndex].title = newTitleFromResponse
       });
     },
