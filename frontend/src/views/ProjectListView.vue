@@ -69,18 +69,20 @@ export default {
       })
     }
 
-    try {
-      const categories = await this.$http.get('/api/categories/')
+    this.$http.get('/api/categories/').then(categories => {
+      const categoriesData = categories.data.data
 
-      for (const category of categories.data.data) {
-        const projects = await this.$http.get(`/api/projects/?category=${category.id}`)
-        category.projects = projects.data.data
-
-        this.categories.push(category)
+      for (const category of categoriesData) {
+        this.$http.get(`/api/projects/?category=${category.id}`).then(projects => {
+          category.projects = projects.data.data
+          this.categories.push(category)
+        })
       }
-    } catch (error) {
-      this.$alert("Unknown client error", error);
-    }
+    }).catch(error => {
+      if (error.response.status === 401 || error.response.status === 403) {
+        this.$router.push('/login/')
+      }
+    })
   }
 }
 </script>

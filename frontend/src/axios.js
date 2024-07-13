@@ -55,15 +55,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   error => {
-    // Handle errors globally if needed
-    const foundAPIError = error.response?.data?.data?.message;
-    const errorMessage = foundAPIError || error.message;
-    const title = foundAPIError ? "Can't do that!" : getErrorTitle(error);
-
-    console.error('An error occurred:', errorMessage);
-    
-    displayAlert(title, errorMessage);
-
     return Promise.reject(error);
   }
 );

@@ -36,21 +36,21 @@ class CategoryViewSet(viewsets.ModelViewSet):
         return Response({
             "success": False,
             "message": "Categories cannot be created directly."
-        }, status=status.HTTP_403_FORBIDDEN)
+        }, status=status.HTTP_200_OK)
     
     def update(self, request, *args, **kwargs):
         # Categories cannot be updated by the user directly
         return Response({
             "success": False,
             "message": "Categories cannot be updated directly."
-        }, status=status.HTTP_403_FORBIDDEN)
+        }, status=status.HTTP_200_OK)
     
     def destroy(self, request, *args, **kwargs):
         # Categories cannot be deleted by the user directly
         return Response({
             "success": False,
             "message": "Categories cannot be deleted directly."
-        }, status=status.HTTP_403_FORBIDDEN)
+        }, status=status.HTTP_200_OK)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -87,7 +87,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot create a project in a locked category."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -102,7 +102,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot update a project in a locked category."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         if 'name' in request.data:
             instance.name = request.data['name']
@@ -156,7 +156,7 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot update a task container in a locked project."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         if 'order' in data: # Allow order to be updated even if the task container is completed
             instance.order = data['order']
@@ -166,7 +166,7 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
                 return Response({
                     "success": False,
                     "message": "Cannot update the title of a completed task container."
-                }, status=status.HTTP_403_FORBIDDEN)
+                }, status=status.HTTP_200_OK)
             
             instance.title = data['title']
         
@@ -195,7 +195,7 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot create a task container in a locked project."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         if not 'order' in data:
             data['order'] = TaskContainer.objects.filter(project=project).count()
@@ -257,12 +257,12 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot delete a task container in a locked project."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         elif instance.is_completed:
             return Response({
                 "success": False,
                 "message": "Cannot delete a completed task container."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         instance.delete()
 
@@ -294,7 +294,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot update a task in a locked or completed task container."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         if 'order' in data: # Allow order to be updated even if the task is completed
             instance.order = data['order']
@@ -313,7 +313,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                 return Response({
                     "success": False,
                     "message": "Cannot update a completed task."
-                }, status=status.HTTP_403_FORBIDDEN)
+                }, status=status.HTTP_200_OK)
             
             instance.title = data['title']
         
@@ -341,7 +341,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot create a task in a locked or completed task container."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         if not 'order' in data:
             data['order'] = Task.objects.filter(task_container=task_container).count()
@@ -387,7 +387,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                     "message": "Task does not exist."
                 }, status=status.HTTP_404_NOT_FOUND)
             response = self.update_instance(task, task_data)
-            print(response.data)
+            
             if not response.data['success']:
                 return Response({
                     "success": False,
@@ -403,7 +403,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot delete that is completed or in a locked or completed task container."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         instance.delete()
         
@@ -485,7 +485,7 @@ class SessionViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot create a session in a locked project."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
 
         # Update active status of all sessions
         queryset = self.get_queryset()
@@ -535,7 +535,7 @@ class SessionViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot update a session in a locked project."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         try:
             instance.duration = request.data.get('duration', instance.duration)
@@ -571,7 +571,7 @@ class SessionViewSet(viewsets.ModelViewSet):
         return Response({
             "success": False,
             "message": "Sessions cannot be deleted directly."
-        }, status=status.HTTP_403_FORBIDDEN)
+        }, status=status.HTTP_200_OK)
     
 class NoteViewSet(viewsets.ModelViewSet):
     """
@@ -607,7 +607,7 @@ class NoteViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot create a note in an inactive session."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -621,7 +621,7 @@ class NoteViewSet(viewsets.ModelViewSet):
             return Response({
                 "success": False,
                 "message": "Cannot update a note in an inactive session."
-            }, status=status.HTTP_403_FORBIDDEN)
+            }, status=status.HTTP_200_OK)
         
         try:
             instance.content = request.data.get('content', instance.content)
