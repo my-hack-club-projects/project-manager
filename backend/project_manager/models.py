@@ -43,7 +43,7 @@ class Session(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     duration = models.IntegerField(default=60)  # in minutes
     active = models.BooleanField(default=True)
-    goal = models.TextField(default="No goal")
+    goal = models.TextField(default="No goal", max_length=100)
     tasks = models.ManyToManyField(Task)
 
     def __str__(self):
