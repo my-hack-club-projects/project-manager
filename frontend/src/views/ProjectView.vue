@@ -9,13 +9,14 @@
           :options="dragOptions">
           <template #item="{ element }">
             <TaskContainer :locked="locked" :key="element.id" :id="element.id" :title="element.title"
-              :is_completed="element.is_completed" :tasks="element.tasks" @delete="deleteTaskContainer"
-              @edit="editTaskContainer" />
+              :is_completed="element.is_completed" :tasks="element.tasks" :constraints="constraints"
+              @delete="deleteTaskContainer" @edit="editTaskContainer" />
           </template>
         </draggable>
       </div>
 
-      <AddTaskForm :disabled="locked" :placeholder="'New milestone'" @add-task="addTaskContainer" />
+      <AddTaskForm :disabled="locked" :placeholder="'New milestone'" @add-task="addTaskContainer"
+        :maxLength="constraints.taskcontainer.title" />
       <div id="bottom-spacer" class="h-64"></div>
     </div>
   </div>

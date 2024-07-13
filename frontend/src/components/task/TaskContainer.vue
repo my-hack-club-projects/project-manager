@@ -19,7 +19,7 @@
             @edit-task="editTask" @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
 
         <div v-if="!is_completed && !locked">
-            <AddTaskForm ref="addTaskForm" @add-task="addTask" />
+            <AddTaskForm ref="addTaskForm" @add-task="addTask" :maxLength="constraints.task.title" />
         </div>
     </div>
 </template>
@@ -37,6 +37,7 @@ export default {
         is_completed: Boolean,
         tasks: Array,
         locked: Boolean,
+        constraints: Object
     },
     components: {
         AddTaskForm,
