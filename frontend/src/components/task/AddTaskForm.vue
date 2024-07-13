@@ -2,7 +2,7 @@
     <form @submit.prevent="onSubmit">
         <div class="flex mt-4">
             <input ref="input" v-model="newTask" type="text"
-                class="add-task-input w-full px-4 py-2 mr-2 rounded-lg border-gray-300 focus:outline-none focus:border-blue-500"
+                class="add-task-input w-full px-4 py-2 mr-2 rounded border-gray-300 focus:outline-none focus:border-blue-500"
                 :placeholder="placeholder" required />
             <TextButton color="blue">
                 Add

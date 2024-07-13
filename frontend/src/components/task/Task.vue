@@ -1,5 +1,5 @@
 <template>
-    <li class="border-b border-gray-200 bg-slate-100 flex items-center justify-between px-4 py-4 my-2 rounded-xl"
+    <li class="border-b border-gray-200 bg-slate-100 flex items-center justify-between px-4 py-4 my-2 rounded"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="flex items-center flex-1 mr-4 overflow-hidden">
             <input type="checkbox" class="mr-2 flex-shrink-0" :checked="completed" :disabled="completed"
