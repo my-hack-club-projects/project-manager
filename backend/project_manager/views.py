@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Category, Project, TaskContainer, Task, Session, Note
 from .serializers import CategorySerializer, ProjectSerializer, TaskContainerSerializer, TaskSerializer, SessionSerializer, NoteSerializer
+from django.http import JsonResponse
 
 """
 Strict rules for returning responses:
@@ -670,3 +671,30 @@ class NoteViewSet(viewsets.ModelViewSet):
             "success": True,
             "message": "Note deleted successfully."
         })
+
+def get_constraints(request):
+    # Returns all max_length constraints for all models
+    return JsonResponse({
+        "success": True,
+        "data": {
+            "category": {
+                "name": Category._meta.get_field("name").max_length
+            },
+            "project": {
+                "name": Project._meta.get_field("name").max_length,
+                "description": Project._meta.get_field("description").max_length
+            },
+            "taskcontainer": {
+                "title": TaskContainer._meta.get_field("title").max_length
+            },
+            "task": {
+                "title": Task._meta.get_field("title").max_length
+            },
+            "session": {
+                "goal": Session._meta.get_field("goal").max_length
+            },
+            "note": {
+                "content": Note._meta.get_field("content").max_length
+            }
+        }
+    })

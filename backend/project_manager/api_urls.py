@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, ProjectViewSet, TaskContainerViewSet, SessionViewSet, TaskViewSet, NoteViewSet
+from .views import CategoryViewSet, ProjectViewSet, TaskContainerViewSet, SessionViewSet, TaskViewSet, NoteViewSet, get_constraints
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -16,4 +16,5 @@ router.register(r'notes', NoteViewSet, basename='note')
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     path('', include(router.urls)),
+    path('constraints/', get_constraints),
 ]
