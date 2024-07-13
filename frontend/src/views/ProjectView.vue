@@ -153,7 +153,7 @@ export default {
     const projectId = this.$route.params.projectId
 
     this.$http.get(`/api/projects/${projectId}`).then(project => {
-      this.project = project.data
+      this.project = project.data.data
 
       this.$http.get(`/api/taskcontainers/?project=${projectId}`).then(containers => {
         const containersData = containers.data.data
