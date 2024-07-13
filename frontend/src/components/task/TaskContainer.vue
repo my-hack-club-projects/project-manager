@@ -16,7 +16,10 @@
 
         <TaskList :tasks="tasks" :disable-drag="is_completed" @delete-task="deleteTask" @edit-task="editTask"
             @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
-        <AddTaskForm ref="addTaskForm" @add-task="addTask" />
+
+        <div v-if="!is_completed">
+            <AddTaskForm ref="addTaskForm" @add-task="addTask" />
+        </div>
     </div>
 </template>
 
@@ -41,7 +44,8 @@ export default {
     },
     data() {
         return {
-            isHovered: false
+            isHovered: false,
+            is_completed: this.is_completed
         };
     },
     methods: {
@@ -93,6 +97,8 @@ export default {
                         break;
                     }
                 }
+
+                this.is_completed = this.tasks.every(task => task.is_completed);
             });
         },
         sortTasks(newTasks) {
