@@ -1,6 +1,6 @@
 <template>
   <div class="h-full py-4">
-    <SessionInfo :archived="locked" :project="project" />
+    <SessionInfo :archived="locked" :project="project" :constraints="constraints" />
 
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>

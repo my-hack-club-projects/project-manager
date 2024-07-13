@@ -34,6 +34,7 @@
 
         <PopupWindow v-if="projectPopup" @close="projectPopup = false" :title="project.name"
             :description="project.description" :titleEditable="true" :descriptionEditable="true"
+            :titleMaxLength="constraints.project.name" :descriptionMaxLength="constraints.project.description"
             @change="onProjectDataChanged">
             <div class="flex mt-2">
                 <TextButton color="red" @click="deleteProject" class="mr-2">Delete project</TextButton>
@@ -55,6 +56,7 @@ export default {
     props: {
         project: Object,
         archived: Boolean,
+        constraints: Object,
     },
     components: {
         PopupWindow,
