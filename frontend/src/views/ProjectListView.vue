@@ -51,8 +51,6 @@ export default {
       }).then(response => {
         const project = response.data.data
         this.$router.push(`/projects/${defaultCategory.id}/${project.id}/view`)
-      }).catch(error => {
-        alert(error.response.data.message)
       })
     }
   },

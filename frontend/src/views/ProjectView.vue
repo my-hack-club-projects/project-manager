@@ -58,9 +58,6 @@ export default {
         }
 
         this.sort()
-        // this.taskContainers = response.data.data
-      }).catch(error => {
-        alert(error.response.data.message)
       })
     },
     addTaskContainer(title) {
@@ -77,8 +74,6 @@ export default {
 
         // Scroll to the bottom of the page
         document.getElementById('bottom-spacer').scrollIntoView({ behavior: 'smooth' })
-      }).catch(error => {
-        alert(error.response.data.message)
       })
     },
     deleteTaskContainer(taskContainerId) {
@@ -86,8 +81,6 @@ export default {
 
       this.$http.delete(`/api/taskcontainers/${taskContainerId}/`).then(() => {
         this.taskContainers.splice(taskContainerIndex, 1)
-      }).catch(error => {
-        alert(error.response.data.message)
       })
     },
     editTaskContainer(taskContainerId, newTitle) {
@@ -98,8 +91,6 @@ export default {
       }).then(response => {
         const newTitleFromResponse = response.data.data.title
         this.taskContainers[taskContainerIndex].title = newTitleFromResponse
-      }).catch(error => {
-        alert(error.response.data.message)
       })
     },
     taskIsCompleted() {

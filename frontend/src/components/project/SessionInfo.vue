@@ -97,9 +97,6 @@ export default {
                     }).then(response => {
                         this.project.name = title
                         this.project.description = description
-                    }).catch(error => {
-                        alert(error)
-                        alert(error.response.data.message);
                     });
                 }
             }, this.projectEditDebounceDuration);
