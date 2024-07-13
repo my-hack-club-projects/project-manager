@@ -108,8 +108,8 @@ export default {
         deleteSelf() {
             this.$emit('delete', this.id);
         },
-        editSelf() {
-            const newTitle = prompt('Enter new name', this.title);
+        async editSelf() {
+            const newTitle = await this.$prompt('Enter new name', this.title);
             if (newTitle !== null) {
                 this.$emit('edit', this.id, newTitle.trim());
             }

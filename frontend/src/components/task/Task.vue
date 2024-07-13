@@ -41,8 +41,8 @@ export default {
             if (this.completed) return;
             this.$emit('toggle-complete');
         },
-        editTask() {
-            const newText = prompt('Enter new name', this.task);
+        async editTask() {
+            const newText = await this.$prompt('Enter new name', this.task);
             if (newText !== null) {
                 this.$emit('edit-task', newText.trim());
             }
