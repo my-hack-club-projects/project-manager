@@ -40,11 +40,15 @@ axiosInstance.interceptors.response.use(
   },
   error => {
     // Handle errors globally if needed
-    console.error('An error occurred:', error);
+    const foundAPIError = error.response?.data?.data?.message;
+    const errorMessage = foundAPIError || error.message;
+    const title = foundAPIError ? "Can't do that!" : 'Unknown client error';
 
-    displayAlert('Unknown client error', error);
+    console.error('An error occurred:', errorMessage);
+    
+    displayAlert(title, errorMessage);
 
-    return Promise.reject(error);
+    return Promise.reject(errorMessage);
   }
 );
 

@@ -97,8 +97,6 @@ export default {
                     }).then(response => {
                         this.project.name = title
                         this.project.description = description
-                    }).catch(error => {
-                        this.$alert("Unknown client error", error);
                     });
                 }
             }, this.projectEditDebounceDuration);
@@ -111,8 +109,6 @@ export default {
 
             this.$http.delete(`/api/projects/${this.project.id}/`).then(() => {
                 this.$router.push('/projects/');
-            }).catch(error => {
-                this.$alert("Unknown client error", error);
             });
 
             event.stopPropagation();

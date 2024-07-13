@@ -58,8 +58,6 @@ export default {
         }
 
         this.sort()
-      }).catch(error => {
-        this.$alert("Unknown client error", error);
       });
     },
     addTaskContainer(title) {
@@ -76,8 +74,6 @@ export default {
 
         // Scroll to the bottom of the page
         document.getElementById('bottom-spacer').scrollIntoView({ behavior: 'smooth' })
-      }).catch(error => {
-        this.$alert("Unknown client error", error);
       });
     },
     deleteTaskContainer(taskContainerId) {
@@ -85,8 +81,6 @@ export default {
 
       this.$http.delete(`/api/taskcontainers/${taskContainerId}/`).then(() => {
         this.taskContainers.splice(taskContainerIndex, 1)
-      }).catch(error => {
-        this.$alert("Unknown client error", error);
       });
     },
     editTaskContainer(taskContainerId, newTitle) {
@@ -97,8 +91,6 @@ export default {
       }).then(response => {
         const newTitleFromResponse = response.data.data.title
         this.taskContainers[taskContainerIndex].title = newTitleFromResponse
-      }).catch(error => {
-        this.$alert("Unknown client error", error);
       });
     },
     taskIsCompleted() {
