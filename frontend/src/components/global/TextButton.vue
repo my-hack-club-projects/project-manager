@@ -1,6 +1,6 @@
 <template>
     <!-- previously used :class="`bg-transparent hover:bg-[${this.color}] text-[${this.color}] font-semibold hover:text-white py-2 px-4 border border-[${this.color}] hover:border-transparent rounded shadow-md`"> -->
-    <button @click="this.emit('click')"
+    <button @click="this.$emit('click')"
         :class="`bg-transparent ${this.colors[this.color]} font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded shadow-md`">
         <slot></slot>
     </button>
