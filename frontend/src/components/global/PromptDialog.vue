@@ -6,9 +6,8 @@
                 <button @click="close(false)" class="text-2xl">&times;</button>
             </div>
             <div>
-                <p class="text-gray-500 mb-4">{{ message }}</p>
                 <input type="text" class="w-full p-2 border border-gray-300 rounded mb-4" v-model="inputValue"
-                    @keyup.enter="confirm" />
+                    @keyup.enter="confirm" ref="inputField" />
                 <div class="flex justify-end">
                     <button @click="confirm" class="bg-blue-500 text-white px-4 py-2 rounded">Confirm</button>
                 </div>
@@ -23,7 +22,6 @@ export default {
         return {
             visible: false,
             title: '',
-            message: '',
             inputValue: '',
             resolve: null,
             reject: null,
@@ -32,9 +30,12 @@ export default {
     methods: {
         show(title, message) {
             this.title = title;
-            this.message = message;
-            this.inputValue = '';
+            this.inputValue = message;
             this.visible = true;
+
+            this.$nextTick(() => {
+                this.$refs.inputField.focus();
+            });
 
             return new Promise((resolve, reject) => {
                 this.resolve = resolve;
