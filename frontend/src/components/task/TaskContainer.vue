@@ -1,7 +1,7 @@
 <template>
     <div :id="`task-container-${id}`" class="container my-5 bg-slate-200 rounded-lg shadow-md p-6 w-full"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
-        <div class="flex justify-between">
+        <div v-if="!is_completed" class="flex justify-between">
             <div class="flex items-center">
                 <h1 class="text-lg font-bold">{{ title }}</h1>
                 <button @click="editSelf" class="ml-4 relative">

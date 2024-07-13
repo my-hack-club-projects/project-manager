@@ -6,7 +6,7 @@
                 @change="toggleComplete" />
             <span class="truncate" :class="{ 'completed': completed }">{{ task }}</span>
         </div>
-        <div class="flex-shrink-0 flex items-center">
+        <div v-if="!completed" class="flex-shrink-0 flex items-center">
             <button class="mr-4 relative" @click="editTask">
                 <EditIcon :isHovered="isHovered" />
             </button>
