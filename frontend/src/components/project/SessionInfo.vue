@@ -59,6 +59,7 @@ export default {
             projectPopup: false,
             projectLastEdit: new Date(),
             projectEditDebounceDuration: 1000,
+            archived: false,
         }
     },
     methods: {
@@ -107,15 +108,19 @@ export default {
         },
 
         async archiveProject(event) {
-            if (!await this.$confirm('Are you sure you want to archive this project?', false)) {
+            const message = `Are you sure you want to ${this.archived ? 'unarchive' : 'archive'} this project?`;
+            if (!await this.$confirm(message, false)) {
                 return;
             }
 
             this.$http.post('/api/projects/archive/', {
                 id: this.project.id,
-                archive: true,
+                archive: !this.archived,
             }).then(() => {
-                this.$router.push('/projects/');
+                // this.$router.push('/projects/');
+                this.$http.get(`/api/projects/${this.project.id}/`).then(response => {
+                    this.$router.push(`/projects/${response.data.data.category.id}/${response.data.data.id}/`);
+                });
             });
 
             event.stopPropagation();

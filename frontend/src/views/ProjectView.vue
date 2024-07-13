@@ -1,21 +1,21 @@
 <template>
   <div class="h-full py-4">
-    <SessionInfo :project="project" />
+    <SessionInfo :archived="locked" :project="project" />
 
     <div class="container mx-auto mt-6">
       <h2 class="text-2xl font-bold mb-4 mt-2">Tasks</h2>
       <div class="flex flex-col">
-        <draggable v-model="taskContainers" @change="onDragEnd" :itemKey="container => container.id"
+        <draggable v-model="taskContainers" @change="onDragEnd" :disabled="locked" :itemKey="container => container.id"
           :options="dragOptions">
           <template #item="{ element }">
-            <TaskContainer :key="element.id" :id="element.id" :title="element.title"
+            <TaskContainer :locked="locked" :key="element.id" :id="element.id" :title="element.title"
               :is_completed="element.is_completed" :tasks="element.tasks" @delete="deleteTaskContainer"
               @edit="editTaskContainer" />
           </template>
         </draggable>
       </div>
 
-      <AddTaskForm :placeholder="'New milestone'" @add-task="addTaskContainer" />
+      <AddTaskForm :locked="locked" :placeholder="'New milestone'" @add-task="addTaskContainer" />
       <div id="bottom-spacer" class="h-64"></div>
     </div>
   </div>
@@ -37,6 +37,7 @@ export default {
   data() {
     return {
       project: '',
+      locked: true, // locked by default, will be updated in the created hook
       taskContainers: [],
     }
   },
@@ -189,6 +190,10 @@ export default {
       } else {
         this.$alert('An error occurred while fetching the project data. Please try again later.', error)
       }
+    })
+
+    this.$http.get(`/api/categories/${categoryId}/`).then(category => {
+      this.locked = category.data.data.locked
     })
   }
 }

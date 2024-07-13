@@ -1,16 +1,16 @@
 <template>
     <div :id="`task-container-${id}`" class="container my-5 rounded-lg p-6 w-full"
-        :class="{ 'bg-gray-200': is_completed, 'bg-slate-200': !is_completed, 'shadow-md': !is_completed }"
+        :class="{ 'bg-gray-200': is_completed, 'bg-slate-200': !is_completed && !locked, 'shadow-md': !is_completed && !locked }"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="flex justify-between">
             <div class="flex items-center">
                 <h1 class="text-lg font-bold" :class="{ 'line-through': is_completed }">{{ title }}</h1>
-                <button v-if="!is_completed" @click="editSelf" class="ml-4 relative">
+                <button v-if="!is_completed && !locked" @click="editSelf" class="ml-4 relative">
                     <EditIcon :isHovered="isHovered" />
                 </button>
             </div>
 
-            <button v-if="!is_completed" @click="deleteSelf" class="mx-2 relative">
+            <button v-if="!is_completed && !locked" @click="deleteSelf" class="mx-2 relative">
                 <DeleteIcon :isHovered="isHovered" />
             </button>
         </div>
@@ -18,7 +18,7 @@
         <TaskList :tasks="tasks" :disable-drag="is_completed" @delete-task="deleteTask" @edit-task="editTask"
             @toggle-complete="toggleComplete" @sort-tasks="sortTasks" />
 
-        <div v-if="!is_completed">
+        <div v-if="!is_completed && !locked">
             <AddTaskForm ref="addTaskForm" @add-task="addTask" />
         </div>
     </div>
@@ -35,7 +35,8 @@ export default {
         id: Number,
         title: String,
         is_completed: Boolean,
-        tasks: Array
+        tasks: Array,
+        locked: Boolean,
     },
     components: {
         AddTaskForm,
