@@ -1,5 +1,5 @@
     <template>
-        <div @click="editProject"
+        <div @click="showProjectPopup"
             class="container grid grid-cols-1 md:grid-cols-2 items-center justify-center mx-auto p-4 gap-4 bg-slate-200 rounded-lg shadow-md hover:cursor-pointer">
             <div class="flex items-center">
                 <h2 class="text-3xl truncate font-bold mb-4 mt-2 w-full">{{ project.name }}</h2>
@@ -39,13 +39,27 @@
                 </div>
             </div>
         </div>
+
+        <PopupWindow v-if="projectPopup" @close="projectPopup = false" :title="project.name"
+            :description="'Example description goes here'" :titleEditable="true" :descriptionEditable="true">
+            <!-- Display additional elements here -->
+        </PopupWindow>
     </template>
 
 <script>
+import PopupWindow from './PopupWindow.vue';
 
 export default {
     props: {
         project: Object,
+    },
+    components: {
+        PopupWindow,
+    },
+    data() {
+        return {
+            projectPopup: false,
+        }
     },
     methods: {
         onSessionInfoClicked() {
@@ -55,6 +69,10 @@ export default {
             console.log('Pause button clicked');
 
             event.stopPropagation();
+        },
+
+        showProjectPopup() {
+            this.projectPopup = true;
         },
 
         editProject(event) {
