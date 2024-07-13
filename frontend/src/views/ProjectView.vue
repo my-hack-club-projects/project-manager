@@ -39,6 +39,7 @@ export default {
       project: '',
       locked: true, // locked by default, will be updated in the created hook
       taskContainers: [],
+      constraints: {},
     }
   },
   methods: {
@@ -194,6 +195,10 @@ export default {
 
     this.$http.get(`/api/categories/${categoryId}/`).then(category => {
       this.locked = category.data.data.locked
+    })
+
+    this.$http.get('/api/constraints/').then(constraints => {
+      this.constraints = constraints.data.data
     })
   }
 }
