@@ -53,7 +53,6 @@
 <script>
 import PopupWindow from './PopupWindow.vue';
 import TextButton from '../global/TextButton.vue'
-import { Text } from 'vue';
 
 export default {
     props: {
