@@ -110,6 +110,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
         
         if 'name' in request.data:
             instance.name = request.data['name']
+        if 'description' in request.data:
+            instance.description = request.data['description']
         if 'category' in request.data:
             try:
                 category_id = request.data['category']

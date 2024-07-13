@@ -13,6 +13,7 @@ class Category(models.Model):
     
 class Project(models.Model):
     name = models.CharField(max_length=64)
+    description = models.TextField(max_length=2000, default="")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
 
