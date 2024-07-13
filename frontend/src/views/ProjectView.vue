@@ -174,7 +174,7 @@ export default {
 
         return { ...container, tasks }
       }))
-      console.log(containersWithTasks)
+
       this.taskContainers = containersWithTasks
 
       this.sort()

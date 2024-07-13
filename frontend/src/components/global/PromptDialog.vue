@@ -1,4 +1,3 @@
-<!-- src/components/global/PromptDialog.vue -->
 <template>
     <div v-if="visible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
         <div class="bg-white w-full sm:w-5/6 md:w-3/4 p-6 rounded-lg shadow-lg">
