@@ -9,7 +9,7 @@
                 <input type="text" class="w-full p-2 border border-gray-300 rounded mb-4" v-model="inputValue"
                     @keyup.enter="confirm" ref="inputField" />
                 <div class="flex justify-end">
-                    <button @click="confirm" class="bg-blue-500 text-white px-4 py-2 rounded">Confirm</button>
+                    <TextButton @click="confirm" color="blue">Confirm</TextButton>
                 </div>
             </div>
         </div>
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import TextButton from './TextButton.vue';
+
 export default {
     data() {
         return {
@@ -26,6 +28,9 @@ export default {
             resolve: null,
             reject: null,
         };
+    },
+    components: {
+        TextButton,
     },
     methods: {
         show(title, message) {

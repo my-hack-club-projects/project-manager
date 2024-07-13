@@ -6,13 +6,15 @@
                 <p class="text-gray-500">{{ message }}</p>
             </div>
             <div class="flex justify-end">
-                <button @click="close" class="px-4 py-2 bg-blue-500 text-white rounded">Ok</button>
+                <TextButton @click="close" color="blue">Ok</TextButton>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import TextButton from './TextButton.vue';
+
 export default {
     data() {
         return {
@@ -20,6 +22,9 @@ export default {
             title: '',
             message: ''
         };
+    },
+    components: {
+        TextButton
     },
     methods: {
         show(title, message) {
