@@ -1,15 +1,16 @@
 <template>
-    <div :id="`task-container-${id}`" class="container my-5 bg-slate-200 rounded-lg shadow-md p-6 w-full"
+    <div :id="`task-container-${id}`" class="container my-5 rounded-lg p-6 w-full"
+        :class="{ 'bg-gray-200': is_completed, 'bg-slate-200': !is_completed, 'shadow-md': !is_completed }"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
-        <div v-if="!is_completed" class="flex justify-between">
+        <div class="flex justify-between">
             <div class="flex items-center">
-                <h1 class="text-lg font-bold">{{ title }}</h1>
-                <button @click="editSelf" class="ml-4 relative">
+                <h1 class="text-lg font-bold" :class="{ 'line-through': is_completed }">{{ title }}</h1>
+                <button v-if="!is_completed" @click="editSelf" class="ml-4 relative">
                     <EditIcon :isHovered="isHovered" />
                 </button>
             </div>
 
-            <button @click="deleteSelf" class="mx-2 relative">
+            <button v-if="!is_completed" @click="deleteSelf" class="mx-2 relative">
                 <DeleteIcon :isHovered="isHovered" />
             </button>
         </div>
