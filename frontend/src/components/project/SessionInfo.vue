@@ -112,8 +112,6 @@ export default {
 
             this.$http.delete(`/api/projects/${this.project.id}/`).then(() => {
                 this.$router.push('/projects/');
-            }).catch(error => {
-                alert(error.response.data.message);
             });
 
             event.stopPropagation();

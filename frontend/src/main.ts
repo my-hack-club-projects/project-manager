@@ -1,6 +1,6 @@
 import './assets/tailwind.css'
 
-import { createApp, h } from 'vue'
+import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import App from './App.vue'
@@ -44,3 +44,6 @@ app.config.globalProperties.$http = axiosInstance
 app.config.globalProperties.$isDevelopment = process.env.NODE_ENV !== 'production'
 
 app.mount('#app')
+
+// Attach the Vue instance to the window object
+window.vm = app;
