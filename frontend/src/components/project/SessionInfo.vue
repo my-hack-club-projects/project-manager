@@ -41,7 +41,8 @@
         </div>
 
         <PopupWindow v-if="projectPopup" @close="projectPopup = false" :title="project.name"
-            :description="'Example description goes here'" :titleEditable="true" :descriptionEditable="true">
+            :description="'Example description goes here'" :titleEditable="true" :descriptionEditable="true"
+            @change="onProjectDataChanged">
             <!-- Display additional elements here -->
         </PopupWindow>
     </template>
@@ -73,6 +74,11 @@ export default {
 
         showProjectPopup() {
             this.projectPopup = true;
+        },
+
+        onProjectDataChanged(title, description) {
+            console.log('Project data changed');
+            console.log(title, description);
         },
 
         editProject(event) {
