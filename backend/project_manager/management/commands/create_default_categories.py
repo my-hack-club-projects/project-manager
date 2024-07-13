@@ -22,10 +22,20 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Created category "{active_projects_category}"'))
 
             # Create "Archived Projects" category for the test user
-            archived_projects_category = Category.objects.create(user=test_user, name="Archived Projects")
+            archived_projects_category = Category.objects.create(user=test_user, name="Archived Projects", locked=True)
             self.stdout.write(self.style.SUCCESS(f'Created category "{archived_projects_category}"'))
-
         else:
-            self.stdout.write(self.style.SUCCESS(f'User "{username}" already exists.'))
+            # Modify "locked" and "order" fields for the categories
+            active_projects_category = Category.objects.get(user=test_user, name="Active Projects")
+            active_projects_category.order = 0
+
+            archived_projects_category = Category.objects.get(user=test_user, name="Archived Projects")
+            archived_projects_category.order = 1
+            archived_projects_category.locked = True
+
+            active_projects_category.save()
+            archived_projects_category.save()
+
+            self.stdout.write(self.style.SUCCESS("Modified categories for the test user"))
 
         self.stdout.write(self.style.SUCCESS(f'Test user created with password: {password}'))

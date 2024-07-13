@@ -60,6 +60,7 @@ export default {
       this.categories.push({
         id: 0,
         name: 'Test category',
+        order: 0,
         projects: Array.from({ length: 5 }, (_, i) => ({
           id: i,
           name: `Test project ${i + 1}`,
@@ -69,15 +70,18 @@ export default {
       })
     }
 
-    this.$http.get('/api/categories/').then(categories => {
+    this.$http.get('/api/categories/').then(async categories => {
       const categoriesData = categories.data.data
 
       for (const category of categoriesData) {
-        this.$http.get(`/api/projects/?category=${category.id}`).then(projects => {
+        await this.$http.get(`/api/projects/?category=${category.id}`).then(projects => {
           category.projects = projects.data.data
           this.categories.push(category)
         })
       }
+
+    }).then(() => {
+      this.categories.sort((a, b) => a.order - b.order)
     }).catch(error => {
       if (error.response.status === 401 || error.response.status === 403) {
         this.$router.push('/login/')
