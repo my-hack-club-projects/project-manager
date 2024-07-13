@@ -48,7 +48,7 @@ class UserProfileAPIView(APIView):
             "first_name": user.first_name,
             "last_name": user.last_name,
 
-            "defaut_category": user.default_category,
-            "archive_category": user.archive_category,
+            "defaut_category": 1, # user.default_category,
+            "archive_category": 2, # user.archive_category,
         }
         return Response(data, status=status.HTTP_200_OK)
