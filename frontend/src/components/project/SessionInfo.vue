@@ -41,7 +41,7 @@
         </div>
 
         <PopupWindow v-if="projectPopup" @close="projectPopup = false" :title="project.name"
-            :description="'Example description goes here'" :titleEditable="true" :descriptionEditable="true"
+            :description="project.description" :titleEditable="true" :descriptionEditable="true"
             @change="onProjectDataChanged">
             <!-- Display additional elements here -->
         </PopupWindow>
@@ -60,6 +60,8 @@ export default {
     data() {
         return {
             projectPopup: false,
+            projectLastEdit: new Date(),
+            projectEditDebounceDuration: 1000,
         }
     },
     methods: {
@@ -79,25 +81,45 @@ export default {
         onProjectDataChanged(title, description) {
             console.log('Project data changed');
             console.log(title, description);
+
+            this.projectLastEdit = new Date();
+
+            // Debounce the API call
+            setTimeout(() => {
+                if (new Date() - this.projectLastEdit >= this.projectEditDebounceDuration) {
+                    this.$http.put(`/api/projects/${this.project.id}/`, {
+                        name: title,
+                        description: description,
+                    }).then(response => {
+                        // this.project.name = response.data.data.name;
+                        // this.project.description = response.data.data.description;
+
+                        // this.project = response.data.data;
+                    }).catch(error => {
+                        alert(error)
+                        alert(error.response.data.message);
+                    });
+                }
+            }, this.projectEditDebounceDuration);
         },
 
-        editProject(event) {
-            const projectName = prompt('Enter new project name', this.project.name);
+        // editProject(event) {
+        //     const projectName = prompt('Enter new project name', this.project.name);
 
-            if (!projectName) {
-                return;
-            }
+        //     if (!projectName) {
+        //         return;
+        //     }
 
-            this.$http.put(`/api/projects/${this.project.id}/`, {
-                name: projectName,
-            }).then(response => {
-                this.project.name = response.data.data.name;
-            }).catch(error => {
-                alert(error.response.data.message);
-            });
+        //     this.$http.put(`/api/projects/${this.project.id}/`, {
+        //         name: projectName,
+        //     }).then(response => {
+        //         this.project.name = response.data.data.name;
+        //     }).catch(error => {
+        //         alert(error.response.data.message);
+        //     });
 
-            event.stopPropagation();
-        },
+        //     event.stopPropagation();
+        // },
 
         deleteProject(event) {
             if (!confirm('Are you sure you want to delete this project?')) {

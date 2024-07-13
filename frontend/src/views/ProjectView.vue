@@ -116,6 +116,7 @@ export default {
       this.project = {
         id: 1,
         name: 'Project name very loooooooooooong',
+        description: 'Project description very loooooooooooong'
       }
 
       this.taskContainers = [
