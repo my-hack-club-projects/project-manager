@@ -7,7 +7,7 @@
             </div>
             <div>
                 <input type="text" class="w-full p-2 border border-gray-300 rounded mb-4" v-model="inputValue"
-                    @keyup.enter="confirm" ref="inputField" />
+                    @keyup.enter="confirm" ref="inputField" :maxlength="maxLength" />
                 <div class="flex justify-end">
                     <TextButton @click="confirm" color="blue">Confirm</TextButton>
                 </div>
@@ -25,6 +25,7 @@ export default {
             visible: false,
             title: '',
             inputValue: '',
+            maxLength: 100,
             resolve: null,
             reject: null,
         };
@@ -33,9 +34,10 @@ export default {
         TextButton,
     },
     methods: {
-        show(title, message) {
+        show(title, message, maxLength = 100) {
             this.title = title;
             this.inputValue = message;
+            this.maxLength = maxLength;
             this.visible = true;
 
             this.$nextTick(() => {

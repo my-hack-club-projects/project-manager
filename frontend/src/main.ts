@@ -42,7 +42,7 @@ app.config.globalProperties.$alert = (title: string, message: string) => {
     return alertDialogInstance.show(title, message);
 };
 
-app.config.globalProperties.$prompt = (title: string, message: string) => {
+app.config.globalProperties.$prompt = (title: string, message: string, maxLength: number | undefined) => {
     if (!promptDialogInstance) {
         const promptDialogContainer = document.createElement('div');
         document.body.appendChild(promptDialogContainer);
@@ -50,7 +50,7 @@ app.config.globalProperties.$prompt = (title: string, message: string) => {
         promptDialogInstance = createApp(PromptDialog).mount(promptDialogContainer);
     }
 
-    return promptDialogInstance.show(title, message);
+    return promptDialogInstance.show(title, message, maxLength);
 };
 
 app.config.globalProperties.$http = axiosInstance
