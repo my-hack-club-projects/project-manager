@@ -1,5 +1,3 @@
-<!-- ProjectCard.vue -->
-
 <template>
     <router-link :to="`${category.id}/${project.id}/view`"
         :class="`${this.colors[this.color]} text-white hover:bg-transparent font-semibold py-2 px-4 border border-transparent rounded shadow-md aspect-video`">
