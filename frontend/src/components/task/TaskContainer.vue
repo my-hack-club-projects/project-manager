@@ -52,6 +52,8 @@ export default {
                 order: this.tasks.length
             }).then(response => {
                 this.tasks.splice(response.data.data.order, 0, response.data.data);
+            }).catch(error => {
+                this.$alert("Unknown client error", error);
             });
         },
         deleteTask(taskIndex, taskId) {
@@ -62,6 +64,8 @@ export default {
                         break;
                     }
                 }
+            }).catch(error => {
+                this.$alert("Unknown client error", error);
             });
         },
         editTask(taskIndex, taskId, newText) {
@@ -75,6 +79,8 @@ export default {
                         break;
                     }
                 }
+            }).catch(error => {
+                this.$alert("Unknown client error", error);
             });
         },
         toggleComplete(taskIndex, taskId) {
@@ -88,6 +94,8 @@ export default {
                         break;
                     }
                 }
+            }).catch(error => {
+                this.$alert("Unknown client error", error);
             });
         },
         sortTasks(newTasks) {
@@ -102,6 +110,8 @@ export default {
 
             this.$http.put(`/api/tasks/bulk_update/`, tasksToUpdate).then(response => {
                 this.tasks = response.data.data
+            }).catch(error => {
+                this.$alert("Unknown client error", error);
             });
         },
 

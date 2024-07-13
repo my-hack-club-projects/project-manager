@@ -51,7 +51,9 @@ export default {
       }).then(response => {
         const project = response.data.data
         this.$router.push(`/projects/${defaultCategory.id}/${project.id}/view`)
-      })
+      }).catch(error => {
+        this.$alert("Unknown client error", error);
+      });
     }
   },
   async created() {
@@ -69,13 +71,17 @@ export default {
       })
     }
 
-    const categories = await this.$http.get('/api/categories/')
+    try {
+      const categories = await this.$http.get('/api/categories/')
 
-    for (const category of categories.data) {
-      const projects = await this.$http.get(`/api/projects/?category=${category.id}`)
-      category.projects = projects.data
+      for (const category of categories.data.data) {
+        const projects = await this.$http.get(`/api/projects/?category=${category.id}`)
+        category.projects = projects.data.data
 
-      this.categories.push(category)
+        this.categories.push(category)
+      }
+    } catch (error) {
+      this.$alert("Unknown client error", error);
     }
   }
 }

@@ -28,6 +28,7 @@ function displayAlert(title, message) {
 axiosInstance.interceptors.response.use(
   response => {
     if (response.data && response.data.success !== true) {
+      console.log('Response error:', response);
       const alertMessage = response.data.message || 'An unknown error occurred';
       const alertTitle = 'Error';
 

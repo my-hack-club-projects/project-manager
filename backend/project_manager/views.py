@@ -94,11 +94,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         self.perform_create(serializer)
 
-        return Response({
-            "success": True,
-            "message": "Project created successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -125,11 +121,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         
         instance.save()
         serializer = self.get_serializer(instance)
-        return Response({
-            "success": True,
-            "message": "Project updated successfully.",
-            "data": serializer.data
-        })
+        return Response(serializer.data)
     
     def destroy(self, request, *args, **kwargs):
         # You can delete projects even if they are in a locked category
@@ -181,11 +173,7 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         
-        return Response({
-            "success": True,
-            "message": "Task container updated successfully.",
-            "data": serializer.data
-        })
+        return Response(serializer.data)
     
 
     def create(self, request, *args, **kwargs):
@@ -213,11 +201,7 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        return Response({
-            "success": True,
-            "message": "Task container created successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -262,11 +246,7 @@ class TaskContainerViewSet(viewsets.ModelViewSet):
                     "message": "Task container does not exist."
                 }, status=status.HTTP_404_NOT_FOUND)
         
-        return Response({
-            "success": True,
-            "message": "Task containers updated successfully.",
-            "data": return_data
-        })
+        return Response(return_data)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -337,11 +317,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         
-        return Response({
-            "success": True,
-            "message": "Task updated successfully.",
-            "data": serializer.data
-        })
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -368,11 +344,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        return Response({
-            "success": True,
-            "message": "Task created successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -416,11 +388,7 @@ class TaskViewSet(viewsets.ModelViewSet):
                 })
             return_data.append(response.data['data'])
         
-        return Response({
-            "success": True,
-            "message": "Tasks updated successfully.",
-            "data": return_data
-        })
+        return Response(return_data)
         
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -476,11 +444,7 @@ class SessionViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(instance)
 
-        return Response({
-            "success": True,
-            "message": "Session retrieved successfully.",
-            "data": serializer.data
-        })
+        return Response(serializer.data)
     
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -496,11 +460,7 @@ class SessionViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(session)
             sessions.append(serializer.data)
 
-        return Response({
-            "success": True,
-            "message": "Sessions retrieved successfully.",
-            "data": sessions
-        })
+        return Response(sessions)
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -560,11 +520,7 @@ class SessionViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         
-        return Response({
-            "success": True,
-            "message": "Session created successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -602,11 +558,7 @@ class SessionViewSet(viewsets.ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         
-        return Response({
-            "success": True,
-            "message": "Session updated successfully.",
-            "data": serializer.data
-        })
+        return Response(serializer.data)
     
     def destroy(self, request, *args, **kwargs):
         return Response({
@@ -654,11 +606,7 @@ class NoteViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        return Response({
-            "success": True,
-            "message": "Note created successfully.",
-            "data": serializer.data
-        }, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -679,11 +627,7 @@ class NoteViewSet(viewsets.ModelViewSet):
         instance.save()
         serializer = self.get_serializer(instance)
         
-        return Response({
-            "success": True,
-            "message": "Note updated successfully.",
-            "data": serializer.data
-        })
+        return Response(serializer.data)
     
     def destroy(self, request, *args, **kwargs):
         # You can delete notes even if the session is inactive - privacy reasons

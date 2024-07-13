@@ -58,7 +58,9 @@ export default {
         }
 
         this.sort()
-      })
+      }).catch(error => {
+        this.$alert("Unknown client error", error);
+      });
     },
     addTaskContainer(title) {
       this.$http.post(`/api/taskcontainers/`, {
@@ -74,14 +76,18 @@ export default {
 
         // Scroll to the bottom of the page
         document.getElementById('bottom-spacer').scrollIntoView({ behavior: 'smooth' })
-      })
+      }).catch(error => {
+        this.$alert("Unknown client error", error);
+      });
     },
     deleteTaskContainer(taskContainerId) {
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
 
       this.$http.delete(`/api/taskcontainers/${taskContainerId}/`).then(() => {
         this.taskContainers.splice(taskContainerIndex, 1)
-      })
+      }).catch(error => {
+        this.$alert("Unknown client error", error);
+      });
     },
     editTaskContainer(taskContainerId, newTitle) {
       const taskContainerIndex = this.taskContainers.findIndex(container => container.id == taskContainerId)
@@ -91,7 +97,9 @@ export default {
       }).then(response => {
         const newTitleFromResponse = response.data.data.title
         this.taskContainers[taskContainerIndex].title = newTitleFromResponse
-      })
+      }).catch(error => {
+        this.$alert("Unknown client error", error);
+      });
     },
     taskIsCompleted() {
       return function (event) {
@@ -155,20 +163,23 @@ export default {
     try {
       const { data: project } = await this.$http.get(`/api/projects/${projectId}`)
 
-      this.project = project
+      this.project = project.data
 
       const { data: containers } = await this.$http.get(`/api/taskcontainers/?project=${projectId}`)
-      const containersWithTasks = await Promise.all(containers.map(async container => {
+      const containersData = containers.data
+
+      const containersWithTasks = await Promise.all(containersData.map(async container => {
         let { data: tasks } = await this.$http.get(`/api/tasks/?task_container=${container.id}`)
+        tasks = tasks.data
 
         return { ...container, tasks }
       }))
-
+      console.log(containersWithTasks)
       this.taskContainers = containersWithTasks
 
       this.sort()
     } catch (error) {
-      console.error('Error fetching data:', error)
+      this.$alert("Unknown client error", error);
     }
   }
 }
