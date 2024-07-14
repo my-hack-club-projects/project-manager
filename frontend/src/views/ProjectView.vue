@@ -88,7 +88,7 @@ export default {
       });
     },
     async deleteTaskContainer(taskContainerId) {
-      if (!await this.$confirm('Are you sure you want to delete this milestone?', false)) {
+      if (!await this.$confirm('Are you sure you want to delete this milestone?')) {
         return
       }
 

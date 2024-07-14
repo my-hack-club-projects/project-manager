@@ -103,7 +103,7 @@ export default {
         },
 
         async deleteProject(event) {
-            if (!await this.$confirm('Are you sure you want to delete this project?', false)) {
+            if (!await this.$confirm('Are you sure you want to delete this project?')) {
                 return;
             }
 
@@ -116,7 +116,7 @@ export default {
 
         async archiveProject(event) {
             const message = `Are you sure you want to ${this.archived ? 'unarchive' : 'archive'} this project?`;
-            if (!await this.$confirm(message, this.archived)) {
+            if (!await this.$confirm(message)) {
                 return;
             }
 
