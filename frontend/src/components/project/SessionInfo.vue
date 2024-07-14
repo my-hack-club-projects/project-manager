@@ -51,7 +51,6 @@
 <script>
 import PopupWindow from './PopupWindow.vue';
 import TextButton from '../global/TextButton.vue'
-import { start } from 'repl';
 
 export default {
     props: {
