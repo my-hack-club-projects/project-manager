@@ -51,6 +51,7 @@
 <script>
 import PopupWindow from './PopupWindow.vue';
 import TextButton from '../global/TextButton.vue'
+import { start } from 'repl';
 
 export default {
     props: {
@@ -83,14 +84,15 @@ export default {
             this.projectPopup = true;
         },
 
-        onProjectDataChanged(title, description) {
-            if (!title || !description) return
+        async onProjectDataChanged(title, description) {
+            if (title === undefined || description === undefined) return
 
-            this.projectLastEdit = new Date();
+            const started = new Date();
+            this.projectLastEdit = started
 
             // Debounce the API call
             setTimeout(() => {
-                if (new Date() - this.projectLastEdit >= this.projectEditDebounceDuration) {
+                if (started === this.projectLastEdit) {
                     this.$http.put(`/api/projects/${this.project.id}/`, {
                         name: title,
                         description: description,
@@ -99,7 +101,7 @@ export default {
                         this.project.description = description
                     });
                 }
-            }, this.projectEditDebounceDuration + 50);
+            }, this.projectEditDebounceDuration);
         },
 
         async deleteProject(event) {
