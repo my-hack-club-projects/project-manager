@@ -7,7 +7,7 @@
                 <button @click="$emit('close')" class="text-2xl">&times;</button>
             </div>
             <textarea class="w-full" placeholder="No description" v-if="descriptionEditable" v-model="description"
-                @input="$emit('change', title, description)" :maxlength="descriptionMaxLength" />
+                @input="$emit('change', title, description)" :maxlength="descriptionMaxLength"></textarea>
             <slot></slot>
         </div>
     </div>
