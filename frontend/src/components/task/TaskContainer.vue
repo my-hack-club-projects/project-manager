@@ -50,7 +50,6 @@ export default {
         return {
             isHovered: false,
             is_completed: this.is_completed,
-            tasks: this.tasks,
         };
     },
     methods: {
@@ -117,7 +116,7 @@ export default {
             }
 
             this.$http.put(`/api/tasks/bulk_update/`, tasksToUpdate).then(response => {
-                this.tasks = response.data.data
+                // this.tasks = response.data.data
             });
         },
 
