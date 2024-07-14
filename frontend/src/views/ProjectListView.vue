@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     createProject() {
-      console.log('Creating project')
       const defaultCategory = this.categories[0] // TODO: Add default_category field to the user endpoint
 
       this.$http.post('/api/projects/', {
