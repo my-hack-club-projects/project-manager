@@ -8,7 +8,7 @@ import TextButton from '@/components/global/TextButton.vue';
     <div class="container mx-auto p-4">
       <div class="flex items-center">
         <h2 class="text-2xl font-bold mb-4 mt-2">Your projects</h2>
-        <TextButton color="blue" class="ml-auto" @click="createProject">
+        <TextButton color="blue" class="ml-auto" @click.stop="createProject">
           Create project
         </TextButton>
       </div>
@@ -23,7 +23,8 @@ import TextButton from '@/components/global/TextButton.vue';
         </div>
 
         <div v-if="categories.length === 0" class="text-center text-gray-500 mt-4">
-          You have no projects yet. Click <button @click="createProject" class="text-blue-500">here</button> to create
+          You have no projects yet. Click <button @click.stop="createProject" class="text-blue-500">here</button> to
+          create
           one.
         </div>
       </div>
@@ -44,6 +45,7 @@ export default {
   },
   methods: {
     createProject() {
+      console.log('Creating project')
       const defaultCategory = this.categories[0] // TODO: Add default_category field to the user endpoint
 
       this.$http.post('/api/projects/', {

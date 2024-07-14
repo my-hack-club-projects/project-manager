@@ -1,5 +1,5 @@
 <template>
-    <button @click="this.$emit('click')"
+    <button
         :class="`bg-transparent ${this.colors[this.color]} font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded shadow-md`">
         <slot></slot>
     </button>
@@ -30,6 +30,6 @@ export default {
                 "white": "hover:bg-white text-white border-white",
             }
         };
-    }
+    },
 }
 </script>
