@@ -49,7 +49,8 @@ export default {
     data() {
         return {
             isHovered: false,
-            is_completed: this.is_completed
+            is_completed: this.is_completed,
+            tasks: this.tasks,
         };
     },
     methods: {
