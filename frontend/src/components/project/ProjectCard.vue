@@ -1,7 +1,7 @@
 <template>
     <router-link :to="`${category.id}/${project.id}/view/`"
         :class="`${this.colors[this.color]} text-white hover:bg-transparent font-semibold py-2 px-4 border border-transparent rounded shadow-md aspect-video`">
-        <h3 class="text-lg font-bold h-full">{{ project.name }}</h3>
+        <h3 class="text-lg font-bold h-full text-wrap truncate">{{ project.name }}</h3>
     </router-link>
 </template>
 

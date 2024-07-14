@@ -64,7 +64,7 @@ export default {
         order: 0,
         projects: Array.from({ length: 5 }, (_, i) => ({
           id: i,
-          name: `Test project ${i + 1}`,
+          name: `Test looooooooooooooooooong ${i + 1}`,
           description: 'This is a test project',
           category: 0
         }))
