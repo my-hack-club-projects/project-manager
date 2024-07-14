@@ -99,7 +99,7 @@ export default {
                         this.project.description = description
                     });
                 }
-            }, this.projectEditDebounceDuration);
+            }, this.projectEditDebounceDuration + 50);
         },
 
         async deleteProject(event) {
