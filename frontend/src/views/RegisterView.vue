@@ -21,8 +21,16 @@ export default {
                 "password2": data.password2
             }).then((response) => {
                 console.log(response.data);
+
+                if (!response.data.success) {
+                    throw new Error(response.data.message || "An error occurred");
+                }
+
+                this.$router.push("/email_sent/");
             }).catch((error) => {
                 console.error(error);
+
+                this.$alert(error.message);
             });
         }
     }

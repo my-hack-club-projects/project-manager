@@ -4,6 +4,8 @@
             <div class="flex flex-col items-center">
                 <h1 class="text-3xl font-bold mt-8">Success!</h1>
                 <p class="text-gray-500 mt-4">Your email was confirmed successfully.</p>
+                <p class="text-gray-500 mt-4">You can now <RouterLink to="/login/" class="text-blue-500">sign in
+                    </RouterLink>.</p>
             </div>
         </div>
     </div>
