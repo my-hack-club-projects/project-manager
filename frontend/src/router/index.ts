@@ -20,9 +20,9 @@ const router = createRouter({
 
         { path: 'login', component: () => import('../views/LoginView.vue') },
         { path: 'register', component: () => import('../views/RegisterView.vue') },
-        { path: 'email_sent', component: () => import('../views/PleaseConfirmEmail.vue') },
-        { path: 'email_confirmed', component: () => import('../views/EmailConfirmed.vue') },
-        { path: 'email_not_confirmed', component: () => import('../views/EmailNotConfirmed.vue') },
+
+        { path: 'email_sent', component: () => import('../views/EmailSent.vue') },
+        { path: 'email_confirm/:success', component: () => import('../views/EmailConfirmed.vue') },
       ]
     },
 

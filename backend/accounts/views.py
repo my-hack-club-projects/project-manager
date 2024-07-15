@@ -19,6 +19,6 @@ class CustomConfirmEmailView(ConfirmEmailView):
         base_url = scheme + '://' + host + '/'
 
         if success:
-            return redirect(base_url + 'email_confirmed')
+            return redirect(base_url + 'email_confirm/success')
         else:
-            return redirect(base_url + 'email_not_confirmed')
+            return redirect(base_url + 'email_confirm/fail')
