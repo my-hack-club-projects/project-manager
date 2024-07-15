@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'accounts',
     'project_manager',
+    'django_extensions',
 ]
 
 REST_FRAMEWORK = {
