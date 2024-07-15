@@ -14,7 +14,6 @@
                     placeholder="Your email">
             </div>
 
-            <!-- terms of use -->
             <div v-if="type == 'register'" class="text-sm font-light text-gray-700 text-center w-full px-6">
                 By signing up, I accept the <a href="#" class="text-blue-500">Terms of Service</a> and acknowledge the
                 <a href="#" class="text-blue-500">Privacy Policy</a>.
