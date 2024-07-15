@@ -37,7 +37,7 @@
             </div>
 
             <div class="grid grid-cols-1 gap-2 mt-2 w-full">
-                <button
+                <button @click.stop="loginWithGoogle"
                     class="flex items-center justify-center w-full bg-white border border-gray-300 rounded shadow px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                     <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-0.5 0 48 48" version="1.1">
@@ -64,7 +64,7 @@
                     <span>Continue with Google</span>
                 </button>
 
-                <button
+                <button @click.stop="loginWithGitHub"
                     class="flex items-center justify-center w-full bg-white border border-gray-300 rounded shadow px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                     <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 73 73" version="1.1">
@@ -132,6 +132,17 @@ export default {
         },
         loginWithGitHub() {
             this.$emit('login-github');
+
+            // first, get the client id and redirect uri from the backend TODO: move to backend
+            const CLIENT_ID = "Ov23liXHNzkzvVnxIdLy";
+            const REDIRECT_URI = "http://127.0.0.1:8000/accounts/github/login/callback/";
+
+            // then, redirect to the github login page
+            window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=user`;
+
+            // the url above points to the github login page, where the user will be asked to login and authorize the app
+            // after that, the user will be redirected to the REDIRECT_URI, which is mapped to the backend endpoint managed by django-allauth
+            // django-allauth will then handle the rest of the process
         }
     }
 };
