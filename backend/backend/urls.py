@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/', include('project_manager.api_urls')),
     path('accounts/', include('accounts.urls')),
 
-    path('', views_common.index, name='index'),
-    re_path(r'^(?P<path>.*)/$', views_common.index, name='index'),
+    path('', views_common.home, name='home'),
+    re_path(r'^projects/(?P<path>.*)/$', views_common.projects, name='projects'),
+    re_path(r'^(?P<path>.*)/$', views_common.anyother, name='anyother'),
 ]
