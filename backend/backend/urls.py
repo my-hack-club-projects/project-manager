@@ -21,19 +21,22 @@ from django.views.generic.base import RedirectView
 from rest_framework.authtoken.views import obtain_auth_token
 
 from . import views as views_common
-from . import auth_views
+# from . import auth_views
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico/', permanent=True)
 
 urlpatterns = [
+    re_path(r'^favicon\.ico$', favicon_view),
+
     path('admin/', admin.site.urls),
     path('api/', include('project_manager.api_urls')),
-    path('auth/login/token', obtain_auth_token, name='obtain-auth-token'),
-    path('auth/login/', auth_views.UserLoginAPIView.as_view(), name='user-login'),
-    path('auth/logout/', auth_views.UserLogoutAPIView.as_view(), name='user-logout'),
-    path('auth/user/', auth_views.UserProfileAPIView.as_view(), name='user-profile'),
 
-    re_path(r'^favicon\.ico$', favicon_view),
+    # path('auth/login/token', obtain_auth_token, name='obtain-auth-token'),
+    # path('auth/login/', auth_views.UserLoginAPIView.as_view(), name='user-login'),
+    # path('auth/logout/', auth_views.UserLogoutAPIView.as_view(), name='user-logout'),
+    # path('auth/user/', auth_views.UserProfileAPIView.as_view(), name='user-profile'),
+
+    path('accounts/', include('allauth.urls')),
 
     # path('', views_common.index, name='index'), # This only works for the home page.
     # add a catch-all path to handle all other paths

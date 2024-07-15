@@ -107,19 +107,21 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
         };
     },
     methods: {
         login(event) {
             event.preventDefault();
 
+            this.$emit('login', {
+                email: this.email
+            });
         },
         loginWithGoogle() {
-
+            this.$emit('login-google');
         },
         loginWithGitHub() {
-
+            this.$emit('login-github');
         }
     }
 };
