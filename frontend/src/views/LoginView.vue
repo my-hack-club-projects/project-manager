@@ -1,7 +1,7 @@
 <template>
     <!-- todo disable scrolling -->
     <div class="flex flex-col items-center h-screen bg-gray-50">
-        <LoginForm type="register"></LoginForm>
+        <LoginForm type="login"></LoginForm>
     </div>
 </template>
 
