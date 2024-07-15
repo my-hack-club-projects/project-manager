@@ -20,6 +20,8 @@ const router = createRouter({
 
         { path: 'login', component: () => import('../views/LoginView.vue') },
         { path: 'register', component: () => import('../views/RegisterView.vue') },
+        { path: 'email_sent', component: () => import('../views/PleaseConfirmEmail.vue') },
+        { path: 'email_confirmation/:confirmationString', component: () => import('../views/EmailConfirmation.vue') },
       ]
     },
 
