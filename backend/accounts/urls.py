@@ -7,5 +7,5 @@ urlpatterns = [
     path('registration/', include('dj_rest_auth.registration.urls')),
     path('email_confirmation/(?P<key>{0})/', CustomConfirmEmailView.as_view(), name="account_confirm_email"),
 
-    path('github/', GitHubLogin.as_view(), name='github_login'),
+    path('github/login/callback/', GitHubLogin.as_view(), name='github_login'),
 ]
