@@ -115,7 +115,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
+# ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 

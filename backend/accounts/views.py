@@ -6,30 +6,22 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomRegisterSerializer, ConfirmEmailSerializer, SetPasswordSerializer
 from django.contrib.auth.models import User
-
-class CustomRegisterView(RegisterView):
-    serializer_class = CustomRegisterSerializer
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(self.get_response_data(user),
-                        status=status.HTTP_201_CREATED,
-                        headers=headers)
+from django.shortcuts import redirect
 
 class CustomConfirmEmailView(ConfirmEmailView):
-    def get(self, *args, **kwargs):
-        self.kwargs['key'] = self.request.query_params.get('key', '')
-        return super().get(*args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        self.object = confirmation = self.get_object()
+        email_address = confirmation.confirm(self.request)
 
-class SetPasswordView(APIView):
-    permission_classes = [IsAuthenticated]
+        if not email_address:
+            return self.respond(False)
+        
+        self.logout_other_user(self.object)
 
-    def post(self, request):
-        serializer = SetPasswordSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        request.user.set_password(serializer.validated_data['new_password1'])
-        request.user.save()
-        return Response({"detail": "Password has been set."})
+        return self.respond(True)
+    
+    def respond(self, success):
+        if success:
+            return redirect('http://localhost:8000/email_confirmed')
+        else:
+            return redirect('http://localhost:8000/email_not_confirmed')

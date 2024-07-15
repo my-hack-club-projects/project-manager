@@ -14,7 +14,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         url = (
             scheme + "://"
             + running_url
-            + "/email_confirmation/"
+            + "/accounts/email_confirmation/"
             + emailconfirmation.key
         )
 
