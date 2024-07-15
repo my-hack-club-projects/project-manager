@@ -1,8 +1,6 @@
-from django.urls import path, re_path, include
+from django.urls import path, include
 from allauth.account.views import confirm_email as allauthemailconfirmation
 from .views import CustomConfirmEmailView
-
-import regex
 
 urlpatterns = [
     path('', include('dj_rest_auth.urls')),
