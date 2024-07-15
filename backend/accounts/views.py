@@ -36,3 +36,6 @@ class GitHubLogin(SocialLoginView):
     def get(self, request, *args, **kwargs):
         request.data['code'] = request.query_params.get('code', '')
         return self.post(request, *args, **kwargs)
+    
+    def get_response(self):
+        return redirect('/')
