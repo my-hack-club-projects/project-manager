@@ -28,6 +28,18 @@ class CustomConfirmEmailView(ConfirmEmailView):
         else:
             return redirect(base_url + 'email_confirm/fail')
         
+    def logout_other_user(self, confirmation):
+        """
+        In the event someone clicks on an email confirmation link
+        for one account while logged into another account,
+        logout of the currently logged in account.
+        """
+        if (
+            self.request.user.is_authenticated
+            and self.request.user.pk != confirmation.email_address.user_id
+        ):
+            self.logout()
+        
 class GitHubLogin(SocialLoginView):
     adapter_class = GitHubOAuth2Adapter
     callback_url = "http://127.0.0.1:8000/accounts/github/login/callback/"
