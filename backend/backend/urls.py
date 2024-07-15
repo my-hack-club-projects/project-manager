@@ -30,8 +30,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('api/', include('project_manager.api_urls')),
-    path('accounts/', include('dj_rest_auth.urls')),
-    path('accounts/registration', include('dj_rest_auth.registration.urls')),
+    path('accounts/', include('accounts.urls')),
 
     # path('auth/login/token', obtain_auth_token, name='obtain-auth-token'),
     # path('auth/login/', auth_views.UserLoginAPIView.as_view(), name='user-login'),
