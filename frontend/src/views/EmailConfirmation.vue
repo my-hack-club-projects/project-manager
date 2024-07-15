@@ -29,7 +29,7 @@ export default {
             console.log("Confirmation string: " + this.$route.params.confirmationString);
             console.log("Sending to: " + `/accounts/rest-auth/registration/account-confirm-email/${this.$route.params.confirmationString}`);
 
-            this.$http.post(`/accounts/rest-auth/registration/account-confirm-email/${this.$route.params.confirmationString}`, {}).then((response) => {
+            this.$http.post(`/accounts/rest-auth/registration/account-confirm-email/${this.$route.params.confirmationString}/`).then((response) => {
                 console.log(response.data);
                 this.confirmed = true;
             }).catch((error) => {
