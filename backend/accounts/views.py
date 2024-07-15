@@ -1,6 +1,10 @@
 from allauth.account.views import ConfirmEmailView
 from django.shortcuts import redirect
 
+from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from dj_rest_auth.registration.views import SocialLoginView
+
 class CustomConfirmEmailView(ConfirmEmailView):
     def get(self, request, *args, **kwargs):
         self.object = confirmation = self.get_object()
@@ -22,3 +26,8 @@ class CustomConfirmEmailView(ConfirmEmailView):
             return redirect(base_url + 'email_confirm/success')
         else:
             return redirect(base_url + 'email_confirm/fail')
+        
+class GitHubLogin(SocialLoginView):
+    adapter_class = GitHubOAuth2Adapter
+    callback_url = "http://127.0.0.1:8000/accounts/github/login/callback/"
+    client_class = OAuth2Client
