@@ -15,7 +15,7 @@ export default {
 
     methods: {
         async registerEmail(data) {
-            this.$http.post('/accounts/registration', {
+            this.$http.post('/accounts/registration/', {
                 "email": data.email,
                 "password1": data.password1,
                 "password2": data.password2
