@@ -16,7 +16,10 @@ const router = createRouter({
         { path: 'about', component: () => import('../views/AboutView.vue') },
         { path: 'contact', component: () => import('../views/ContactView.vue') },
 
-        { path: 'logintest', component: () => import('../views/LoginTest.vue')},
+        { path: 'logintest', component: () => import('../views/LoginTest.vue') },
+
+        { path: 'login', component: () => import('../views/LoginView.vue') },
+
       ]
     },
 
@@ -27,7 +30,7 @@ const router = createRouter({
       component: ProjectManagerLayout,
       children: [
         { path: '', component: () => import('../views/ProjectListView.vue') },
-        { path: 'analytics', component: () => import('../views/ProjectAnalytics.vue')},
+        { path: 'analytics', component: () => import('../views/ProjectAnalytics.vue') },
         { path: ':categoryId(\\d+)/:projectId(\\d+)/view', component: () => import('../views/ProjectView.vue') },
       ]
     },
