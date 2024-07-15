@@ -8,10 +8,16 @@
             </h2>
         </div>
         <form @submit="login" class="flex flex-col items-center mt-4">
-            <div class="mb-4 w-full">
+            <div class="flex flex-col mb-4 w-full gap-2">
                 <input type="email" id="email" v-model="email" required
                     class="w-full px-4 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded shadow"
                     placeholder="Your email">
+                <input type="password" id="password1" v-model="password1" required
+                    class="w-full px-4 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded shadow"
+                    placeholder="Password">
+                <input v-if="type == 'register'" type="password" id="password2" v-model="password2" required
+                    class="w-full px-4 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded shadow"
+                    placeholder="Confirm password">
             </div>
 
             <div v-if="type == 'register'" class="text-sm font-light text-gray-700 text-center w-full px-6">
@@ -107,6 +113,8 @@ export default {
     data() {
         return {
             email: '',
+            password1: '',
+            password2: ''
         };
     },
     methods: {
@@ -114,7 +122,9 @@ export default {
             event.preventDefault();
 
             this.$emit('login', {
-                email: this.email
+                email: this.email,
+                password1: this.password1,
+                password2: this.password2
             });
         },
         loginWithGoogle() {
