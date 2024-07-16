@@ -141,10 +141,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         try:
             project = Project.objects.get(pk=project_id, category__user=request.user)
-            # category = archive and Category.objects.get(pk=request.user.archive_category) or Category.objects.get(pk=request.user.default_category) # Uncomment after extending the user model
-            # for now, use 1 and 2
-            category = archive and Category.objects.get(pk=2) or Category.objects.get(pk=1)
-
+            category = request.user.archive_category if archive else request.user.default_category
+            
             project.category = category
             project.save()
 
