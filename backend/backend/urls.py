@@ -27,9 +27,9 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('api/', include('project_manager.api_urls')),
+    path('api/products/', include('products.urls')),
     path('accounts/', include('accounts.urls')),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
-    path('products/', include('products.urls')),
 
 
     path('', views_common.home, name='home'),
