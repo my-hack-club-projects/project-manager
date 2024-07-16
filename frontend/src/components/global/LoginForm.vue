@@ -18,6 +18,10 @@
                 <input v-if="type == 'register'" type="password" id="password2" v-model="password2" required
                     class="w-full px-4 py-2 bg-white hover:bg-gray-100 border border-gray-300 rounded shadow"
                     placeholder="Confirm password">
+
+                <div v-if="error" class="text-sm text-red-500 text-center w-full px-6">
+                    {{ error }}
+                </div>
             </div>
 
             <div v-if="type == 'register'" class="text-sm font-light text-gray-700 text-center w-full px-6">
@@ -107,8 +111,9 @@ export default {
     props: {
         type: {
             type: String,
-            default: 'login'
-        }
+            default: 'login',
+        },
+        error: String | null,
     },
     data() {
         return {
