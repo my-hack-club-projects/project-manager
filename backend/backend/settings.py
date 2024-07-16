@@ -103,6 +103,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True # Potential security risk if using other providers than Google and GitHub
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True # Potential security risk if using other providers than Google and GitHub
 LOGIN_REDIRECT_URL = '/'
 
