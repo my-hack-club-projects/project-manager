@@ -1,8 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.utils import timezone
+
 class Category(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     locked = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
@@ -59,7 +60,7 @@ class Note(models.Model):
     # notes are like discord messages. they are sent in sessions and can only be sent when a session is active
     # they serve the purpose of having a place to write down your thoughts or communicate with collaborators (if any)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE) # the user who sent the note
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # the user who sent the note
     content = models.TextField(max_length=300)
     timestamp = models.DateTimeField(auto_now_add=True)
 
