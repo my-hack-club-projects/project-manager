@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 
-SITE_ID = 2
+SITE_ID = 3
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
