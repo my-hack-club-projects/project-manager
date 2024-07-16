@@ -1,7 +1,7 @@
 <template>
     <!-- todo disable scrolling -->
     <div class="flex flex-col items-center h-screen bg-gray-50">
-        <LoginForm @login="registerEmail" type="register"></LoginForm>
+        <LoginForm @login="registerEmail" type="register" :error="error"></LoginForm>
     </div>
 </template>
 
@@ -12,7 +12,11 @@ export default {
     components: {
         LoginForm
     },
-
+    data() {
+        return {
+            error: null
+        };
+    },
     methods: {
         async registerEmail(data) {
             this.$http.post('/accounts/registration/', {
@@ -20,17 +24,19 @@ export default {
                 "password1": data.password1,
                 "password2": data.password2
             }).then((response) => {
-                console.log(response.data);
-
                 if (!response.data.success) {
                     throw new Error(response.data.message || "An error occurred");
                 }
 
                 this.$router.push("/email_sent/");
             }).catch((error) => {
-                console.error(error);
+                console.error("Register error", error.response.data);
 
-                this.$alert(error.message);
+                if (error.response.data.success && error.response.data.data.email !== undefined) {
+                    this.error = error.response.data.data.email[0];
+                } else {
+                    this.$alert(error.response.data);
+                }
             });
         }
     }

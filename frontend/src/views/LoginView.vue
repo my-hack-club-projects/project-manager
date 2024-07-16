@@ -34,7 +34,7 @@ export default {
 
                 this.$router.push("/projects/");
             }).catch(error => {
-                console.log("Login response:", error.response.data);
+                console.error("Login error:", error.response.data);
 
                 if (error.response.data.success && error.response.data.data.non_field_errors !== undefined) {
                     this.error = error.response.data.data.non_field_errors[0];
