@@ -3,3 +3,4 @@ django-allauth #==0.61.1
 django-allauth[socialaccount]
 dj-rest-auth
 django-extensions
+dj-stripe

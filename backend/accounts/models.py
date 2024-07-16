@@ -31,3 +31,12 @@ class CustomUserManager(UserManager): # Old, unused, removing breaks migrations
 class CustomUser(AbstractUser):
     default_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='default_user')
     archive_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='archive_user')
+
+    subscription = models.ForeignKey(
+        'djstripe.Subscription', null=True, blank=True, on_delete=models.SET_NULL,
+        help_text="The user's Stripe Subscription object, if it exists"
+    )
+    customer = models.ForeignKey(
+        'djstripe.Customer', null=True, blank=True, on_delete=models.SET_NULL,
+        help_text="The user's Stripe Customer object, if it exists"
+    )    

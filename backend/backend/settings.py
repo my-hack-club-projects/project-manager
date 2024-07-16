@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,7 +48,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'dj_rest_auth.registration',
     'dj_rest_auth',
+    'djstripe',
     'accounts',
+    'products',
     'project_manager',
     'django_extensions',
 ]
@@ -114,6 +117,12 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True # Potential security risk if using oth
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True # Potential security risk if using other providers than Google and GitHub
 LOGIN_REDIRECT_URL = '/'
 ACOUNT_SESSION_REMEMBER = True
+
+
+STRIPE_LIVE_MODE = False
+STRIPE_PRICING_TABLE_ID = 'price_1J5ZQvGKvZ6ZzvZzZzZzZzZz'
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get("DJSTRIPE_WEBHOOK_SECRET", "whsec_xxx")
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 
 SOCIALACCOUNT_PROVIDERS = {
     'github': {
