@@ -6,8 +6,8 @@ class CustomUser(AbstractUser):
     default_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='default_user')
     archive_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='archive_user')
 
-    def save(self):
-        super().save()
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
         if self.default_category is None:
             self.default_category = Category.objects.create(user=self, name="Active Projects")
