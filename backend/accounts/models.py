@@ -9,10 +9,10 @@ class CustomUser(AbstractUser):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        if self.default_category is None:
+        if not Category.objects.filter(user=self, name="Active Projects").exists():
             self.default_category = Category.objects.create(user=self, name="Active Projects")
             self.default_category.save()
 
-        if self.archive_category is None:
+        if not Category.objects.filter(user=self, name="Archived Projects").exists():
             self.archive_category = Category.objects.create(user=self, name="Archived Projects", locked=True)
             self.archive_category.save()
