@@ -76,7 +76,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
 
         try:
-            category_id = data.get('category')
+            category_id = data.get('category', None)
+
+            if not category_id:
+                category_id = request.user.default_category.pk
+                data['category'] = category_id
+                
             category = Category.objects.get(pk=category_id, user=request.user)
         except Category.DoesNotExist:
             return Response({
@@ -142,7 +147,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         try:
             project = Project.objects.get(pk=project_id, category__user=request.user)
             category = request.user.archive_category if archive else request.user.default_category
-            
+
             project.category = category
             project.save()
 

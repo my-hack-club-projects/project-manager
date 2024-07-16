@@ -45,14 +45,12 @@ export default {
   },
   methods: {
     createProject() {
-      const defaultCategory = this.categories[0] // TODO: Add default_category field to the user endpoint
-
       this.$http.post('/api/projects/', {
         name: 'New project',
-        category: defaultCategory.id
       }).then(response => {
         const project = response.data.data
-        this.$router.push(`/projects/${defaultCategory.id}/${project.id}/view`)
+
+        this.$router.push(`/projects/${project.category}/${project.id}/view`)
       });
     }
   },

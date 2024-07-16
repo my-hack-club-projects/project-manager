@@ -10,6 +10,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
+        extra_kwargs = {
+            'category': {'required': False},
+        }
 
 class TaskContainerSerializer(serializers.ModelSerializer):
     class Meta:
