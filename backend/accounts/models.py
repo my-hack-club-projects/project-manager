@@ -3,11 +3,11 @@ from project_manager.models import Category
 from django.db import models
 
 class CustomUser(AbstractUser):
-    default_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True)
-    archive_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True)
+    default_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='default_user')
+    archive_category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='archive_user')
 
     def save(self):
-        self.super.save()
+        super().save()
 
         if self.default_category is None:
             self.default_category = Category.objects.create(user=self, name="Active Projects")
