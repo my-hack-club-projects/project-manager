@@ -19,6 +19,8 @@ export default {
     },
     methods: {
         async registerEmail(data) {
+            this.error = null;
+
             this.$http.post('/accounts/registration/', {
                 "email": data.email,
                 "password1": data.password1,
