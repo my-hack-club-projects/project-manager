@@ -45,13 +45,14 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    'dj_rest_auth.registration',
     'dj_rest_auth',
     'accounts',
     'project_manager',
     'django_extensions',
 ]
 
-SITE_ID = 1
+SITE_ID = 2
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -81,6 +82,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / '../frontend/dist',
+            BASE_DIR / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -106,9 +108,36 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True # Potential security risk if using other providers than Google and GitHub
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True # Potential security risk if using other providers than Google and GitHub
 LOGIN_REDIRECT_URL = '/'
+ACOUNT_SESSION_REMEMBER = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'SCOPE': [
+            'user:email',
+        ],
+        'VERIFIED_EMAIL': True,
+    },
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'VERIFIED_EMAIL': True,
+        'APP': {
+            'client_id': 'Ov23liXHNzkzvVnxIdLy',
+            'secret': '7669c16b1db54b595d339942f61c03c8d8150c21',
+            'key': ''
+        },
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
