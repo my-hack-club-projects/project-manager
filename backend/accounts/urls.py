@@ -4,6 +4,7 @@ from .views import CustomConfirmEmailView, GitHubLogin
 
 urlpatterns = [
     path('', include('dj_rest_auth.urls')),
+    path('', include('allauth.urls')),
     path('registration/', include('dj_rest_auth.registration.urls')),
     re_path(r'^email_confirmation/(?P<key>.+)/$', CustomConfirmEmailView.as_view(), name="account_confirm_email"),
 
