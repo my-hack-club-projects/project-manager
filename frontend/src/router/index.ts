@@ -13,8 +13,7 @@ const router = createRouter({
       component: LandingPageLayout,
       children: [
         { path: '', component: HomeView },
-        { path: 'about', component: () => import('../views/AboutView.vue') },
-        { path: 'contact', component: () => import('../views/ContactView.vue') },
+        { path: 'premium', component: () => import('../views/PremiumView.vue') },
 
         { path: 'logintest', component: () => import('../views/LoginTest.vue') },
 
