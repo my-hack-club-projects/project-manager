@@ -29,7 +29,7 @@ class PriceList(APIView):
     
 class KeyList(APIView):
     def get(self, request):
-        pub_key = APIKey.objects.get(name='STRIPE_TEST_PUBLIC_KEY')
+        pub_key = djstripe_settings.STRIPE_PUBLIC_KEY
 
         return Response({
             'public_key': pub_key.secret,
@@ -39,8 +39,8 @@ class KeyList(APIView):
     
 class ConfirmPayment(APIView):
     def get(self, request):
-        stripe.api_key = APIKey.objects.get(name='STRIPE_TEST_SECRET_KEY').secret
-        
+        stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
+
         session_id = request.GET.get('session_id')
 
         if not session_id:
