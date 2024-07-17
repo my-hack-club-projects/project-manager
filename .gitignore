@@ -5,6 +5,7 @@ __pycache__/
 # Database
 backend/db.sqlite3
 backend/db.sqlite3.bak
+backend/.env
 
 
 # Static files
