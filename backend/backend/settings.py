@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -121,7 +125,8 @@ ACOUNT_SESSION_REMEMBER = True
 
 STRIPE_LIVE_MODE = False
 STRIPE_PRICING_TABLE_ID = 'prctbl_1PdHczFCfOTeyvUVk9qqvEN3'
-STRIPE_TEST_SECRET_KEY = 'sk_test_51PdHczFCfOTeyvUVk9qqvEN3' # Fake key, for some reason djstripe doesn't get it from the database so I'm testing it by hardcoding it here
+STRIPE_TEST_PUBLIC_KEY = os.getenv('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_TEST_SECRET_KEY = os.getenv('STRIPE_TEST_SECRET_KEY')
 DJSTRIPE_WEBHOOK_SECRET = os.environ.get("DJSTRIPE_WEBHOOK_SECRET", "whsec_xxx")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 

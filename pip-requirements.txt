@@ -5,3 +5,4 @@ dj-rest-auth
 django-extensions
 dj-stripe
 stripe
+python-dotenv
