@@ -1,7 +1,8 @@
 <template>
     <div>
         <div v-if="stripePublicKey && stripePricingTableId">
-            <stripe-pricing-table :pricing-table-id="stripePricingTableId" :publishable-key="stripePublicKey">
+            <stripe-pricing-table :pricing-table-id="stripePricingTableId" :publishable-key="stripePublicKey"
+                :client-reference-id="clientReferenceId">
             </stripe-pricing-table>
         </div>
         <div v-else>
@@ -16,6 +17,7 @@ export default {
         return {
             stripePricingTableId: null,
             stripePublicKey: null,
+            clientReferenceId: null,
             isLoaded: false,
         };
     },
@@ -28,7 +30,8 @@ export default {
                 .then(response => {
                     this.stripePricingTableId = response.data.data.pricing_table_id;
                     this.stripePublicKey = response.data.data.public_key;
-                    console.log('Fetched keys:', this.stripePricingTableId, this.stripePublicKey);
+                    this.clientReferenceId = response.data.data.client_reference_id;
+
                     this.loadStripe();
                 })
                 .catch(error => {

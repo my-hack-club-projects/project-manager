@@ -22,6 +22,8 @@ const router = createRouter({
 
         { path: 'email_sent', component: () => import('../views/EmailSent.vue') },
         { path: 'email_confirm/:success', component: () => import('../views/EmailConfirmed.vue') },
+
+        { path: 'payment/:success', component: () => import('../views/PaymentCompleted.vue') },
       ]
     },
 
