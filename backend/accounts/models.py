@@ -39,4 +39,8 @@ class CustomUser(AbstractUser):
     customer = models.ForeignKey(
         'djstripe.Customer', null=True, blank=True, on_delete=models.SET_NULL,
         help_text="The user's Stripe Customer object, if it exists"
-    )    
+    )
+
+    def is_premium(self):
+        # Check if the user has a subscription and if the status is active. When cancelling, it should still consider the user Premium until the end of the billing period.
+        return self.subscription and self.subscription.status == "active"

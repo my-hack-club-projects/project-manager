@@ -69,5 +69,8 @@ class ConfirmPayment(APIView):
 class IsPremium(APIView):
     def get(self, request):
         user = request.user
-        is_premium = user.subscription and user.subscription.status == "active"
-        return Response({'is_premium': is_premium})
+
+        if not user.is_authenticated:
+            return Response({'is_premium': False})
+        
+        return Response({'is_premium': user.is_premium()})
