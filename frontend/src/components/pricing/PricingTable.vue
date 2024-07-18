@@ -10,11 +10,9 @@
         </button>
     </div>
     <div class="flex flex-col md:flex-row px-4 items-center md:items-start justify-center gap-4 w-full">
-        <PricingCard title="Standard" link="/register/" price="0" :monthly="monthly"
-            :features="['Feature 1', 'Feature 2', 'Feature 3']" />
+        <PricingCard title="Standard" link="/register/" price="0" :monthly="monthly" :features="features.standard" />
         <PricingCard title="Premium" :link="monthly ? paymentLinks.monthly : paymentLinks.yearly"
-            :price="monthly ? prices.monthly : prices.yearly" :monthly="monthly"
-            :features="['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4']" />
+            :price="monthly ? prices.monthly : prices.yearly" :monthly="monthly" :features="features.premium" />
     </div>
 </template>
 
@@ -34,6 +32,10 @@ export default {
             monthly: 'https://buy.stripe.com/test_fZe15y4dw8FigV2fYZ',
             yearly: 'https://buy.stripe.com/test_fZe6pS7pI8Fi0W4aEG',
         },
+        features: {
+            standard: ["Some feature", "Another feature"],
+            premium: [],
+        },
         ids: {
             premium: "prod_QUF92RHM6siBA0",
         },
@@ -50,6 +52,8 @@ export default {
 
             this.prices.monthly = premium.prices.find(price => price.recurring.interval == 'month').unit_amount / 100;
             this.prices.yearly = premium.prices.find(price => price.recurring.interval == 'year').unit_amount / 100;
+
+            this.features.premium = premium.metadata.features.split(";");
         });
     },
 }

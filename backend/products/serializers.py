@@ -16,6 +16,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'images',
             'active',
             'prices',
+            'metadata',
         ]
         
 class PriceSerializer(serializers.ModelSerializer):
