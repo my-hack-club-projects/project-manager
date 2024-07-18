@@ -1,17 +1,20 @@
 <template>
     <div class="flex items-center justify-center rounded-md pb-4 mb-16">
-        <button type="button"
+        <button type="button" @click="monthly = true"
             class="px-4 py-2 text-sm min-w-24 font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
             Monthly
         </button>
-        <button type="button"
+        <button type="button" @click="monthly = false"
             class="px-4 py-2 text-sm min-w-24 font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
             Yearly
         </button>
     </div>
     <div class="flex flex-col md:flex-row px-4 items-center md:items-start justify-center gap-4 w-full">
-        <PricingCard title="Standard" price="0" :features="['Feature 1', 'Feature 2', 'Feature 3']" />
-        <PricingCard title="Premium" price="9" :features="['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4']" />
+        <PricingCard title="Standard" link="/register/" price="0" :monthly="monthly"
+            :features="['Feature 1', 'Feature 2', 'Feature 3']" />
+        <PricingCard title="Premium" :link="monthly ? paymentLinks.monthly : paymentLinks.yearly"
+            :price="monthly ? prices.monthly : prices.yearly" :monthly="monthly"
+            :features="['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4']" />
     </div>
 </template>
 
@@ -23,6 +26,31 @@ export default {
     components: {
         PricingCard,
         TextButton,
+    },
+
+    data: () => ({
+        monthly: true,
+        paymentLinks: {
+            monthly: 'https://buy.stripe.com/test_fZe15y4dw8FigV2fYZ',
+            yearly: 'https://buy.stripe.com/test_fZe6pS7pI8Fi0W4aEG',
+        },
+        ids: {
+            premium: "prod_QUF92RHM6siBA0",
+        },
+        prices: {
+            monthly: null,
+            yearly: null,
+        },
+    }),
+
+    async mounted() {
+        // Fetch the prices from the backend
+        this.$http.get("/api/products/list/").then((response) => {
+            const premium = response.data.data.find(product => product.id == this.ids.premium);
+
+            this.prices.monthly = premium.prices.find(price => price.recurring.interval == 'month').unit_amount / 100;
+            this.prices.yearly = premium.prices.find(price => price.recurring.interval == 'year').unit_amount / 100;
+        });
     },
 }
 </script>
