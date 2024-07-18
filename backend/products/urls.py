@@ -8,4 +8,5 @@ urlpatterns = [
     path('keys/', views.KeyList.as_view()),
 
     path('confirm/', views.ConfirmPayment.as_view()),
+    path('is_premium/', views.IsPremium.as_view()),
 ]

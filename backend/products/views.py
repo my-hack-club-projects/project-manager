@@ -65,3 +65,9 @@ class ConfirmPayment(APIView):
         user.save()
 
         return redirect('/payment/success')
+    
+class IsPremium(APIView):
+    def get(self, request):
+        user = request.user
+        is_premium = user.subscription and user.subscription.status == "active"
+        return Response({'is_premium': is_premium})

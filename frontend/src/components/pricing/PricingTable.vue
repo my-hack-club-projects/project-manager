@@ -32,6 +32,7 @@ export default {
             monthly: 'https://buy.stripe.com/test_fZe15y4dw8FigV2fYZ',
             yearly: 'https://buy.stripe.com/test_fZe6pS7pI8Fi0W4aEG',
         },
+        customerPortal: "https://billing.stripe.com/p/login/3cs9BE6rzewx1zO288",
         features: {
             standard: ["Some feature", "Another feature"],
             premium: [],
@@ -54,6 +55,14 @@ export default {
             this.prices.yearly = premium.prices.find(price => price.recurring.interval == 'year').unit_amount / 100;
 
             this.features.premium = premium.metadata.features.split(";");
+        });
+
+        // Fetch user status
+        this.$http.get("/api/products/is_premium/").then((response) => {
+            if (response.data.data.is_premium) {
+                this.paymentLinks.monthly = this.customerPortal;
+                this.paymentLinks.yearly = this.customerPortal;
+            }
         });
     },
 }
