@@ -51,7 +51,7 @@ class ConfirmPayment(APIView):
         except stripe.error.InvalidRequestError:
             return redirect('/payment/failure')
         
-        client_reference_id = int(session.client_reference_id)
+        client_reference_id = session.client_reference_id # TODO: Make sure the user is authenticated, if not, redirect to login page (before even redirecting to the stripe page)
         user = get_user_model().objects.get(id=client_reference_id)
 
         if user != request.user:
