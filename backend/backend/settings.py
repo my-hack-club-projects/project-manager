@@ -129,8 +129,8 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'VERIFIED_EMAIL': True,
         'APP': {
-            'client_id': 'Ov23liXHNzkzvVnxIdLy',
-            'secret': '7669c16b1db54b595d339942f61c03c8d8150c21',
+            'client_id': 'your-client-id',
+            'secret': 'your-secret-here',
             'key': ''
         },
         'AUTH_PARAMS': {

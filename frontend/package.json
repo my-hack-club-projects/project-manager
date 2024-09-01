@@ -17,6 +17,7 @@
     "build:css": "postcss src/assets/tailwind.css -o src/assets/output.css"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
